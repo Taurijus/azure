@@ -1,1 +1,1 @@
-"C:\Program Files (x86)\LOVE\love.exe" "D:\code\azure\game"
+"C:\Program Files\LOVE\love.exe" "E:\Gamejam\Azure\azure\game"
