@@ -2,7 +2,7 @@
 
     PlayerI = {}
 function PlayerI.load()
-	PlayerI.image = love.graphics.newImage("images/PadariukasVio.png")
+	PlayerI.image = love.graphics.newImage("images/padariukas.png")
 	PlayerI.x = 0;
 	PlayerI.y = 0;
 end

@@ -1,4 +1,4 @@
-dragon = {}
+
 function dragon.load()
 	image = love.graphics.newImage("images/padariukas.png")
 	x = 0;
