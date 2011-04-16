@@ -15,7 +15,7 @@ function love.load()
     AI.load()
 	Bullet.load ()
 	gamemap.load()
-	sleepBar.load(100, 100)
+	sleepBar.load(0, 100, 36, 266)
 	healthBar.load(0, 350, 36, 266)
 
 end
@@ -25,7 +25,7 @@ function love.update(dt)
 	PlayerI.update(dt)
 	AI.update(dt)
 	Bullet.update (dt)
-	sleepBar.update(dt, d)
+	sleepBar.update(dt, 0.5)
 	healthBar.update()
 	if love.keyboard.isDown("escape") then
 		love.quit()
