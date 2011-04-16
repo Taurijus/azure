@@ -5,10 +5,12 @@ gamemap = {}
 function gamemap.load()
 	-- voidness coords (where player or dragon should not past)
 	gamemap.image = love.graphics.newImage("images/Baground1.png")
-	gamemap.x = -500
-	gamemap.y = -500
-	gamemap.xoffset = 500
-	gamemap.yoffset = 500
+	gamemap.x = 0
+	gamemap.y = 0
+	gamemap.xoffset = 0
+	gamemap.yoffset = 0
+	gamemap.GoffsetX = 500
+	gamemap.GoffsetY = 0
 	gamemap.rotatioset = -math.pi/4
 	gamemap['void'] = {}
 	gamemap.void[1] = {x1 = 0, y1 = 0, x2 = 0 + 158, y2 = 0 + 208}
@@ -63,7 +65,7 @@ function gamemap.load()
 	gamemap.wall[9][1] = {x1 = 206, y1 = 600, x2 = 206 + 355, y2 = 600 + 14}
 	gamemap.wall[10] = {}
 	gamemap.wall[10][1] = {x1 = 221, y1 = 247, x2 = 221 + 96, y2 = 247 + 15}
-	gamemap.wall[10][2] = {x1 = 303, y1 = 247, x2 = 202 + 14, y2 = 247 + 35}
+	gamemap.wall[10][2] = {x1 = 303, y1 = 247, x2 = 303 + 14, y2 = 247 + 35}
 	gamemap.wall[11] = {}
 	gamemap.wall[11][1] = {x1 = 303, y1 = 346, x2 = 303 + 14, y2 = 346 + 94}
 	gamemap.wall[12] = {}
@@ -163,30 +165,42 @@ end
 function gamemap.update()
 
 end
-function gamemap.transformX(xx, yy, zz, teta, gama, phi)
-return xx*(math.cos(gama)*math.cos(teta))+yy*(math.sin(gama)*math.cos(teta))+zz*(-math.sin(teta))
+function gamemap.transformX(xx, yy, teta, gama, phi)
+return xx*(math.cos(gama)*math.cos(teta))+yy*(math.sin(gama)*math.cos(teta))
 end
-function gamemap.transformY(xx, yy, zz, teta, gama, phi)
-return  xx*(-math.sin(gama)*math.cos(phi)+math.sin(phi)*math.sin(teta)*math.cos(gama))+yy*(math.cos(phi)*math.cos(gama)+math.sin(phi)*math.sin(teta)*math.sin(gama))+zz*(math.sin(phi)*math.cos(teta))
+function gamemap.transformY(xx, yy, teta, gama, phi)
+return  xx*(-math.sin(gama)*math.cos(phi))+yy*(math.cos(phi)*math.cos(gama))
 end
 function gamemap.transformZ(xx, yy, zz, teta, gama, phi)
 return 0
 end
 function gamemap.draw()
-	--love.graphics.draw(gamemap.image, gamemap.x, gamemap.y)
-	--[[ just for checking values
-	]]
-	
+	love.graphics.translate( gamemap.x + gamemap.GoffsetX, gamemap.y +gamemap.GoffsetY)
+	love.graphics.scale(1,0.707)
+	love.graphics.rotate( math.pi/4 )
+	for i = 1, #gamemap.wall do
+                for j = 1, #gamemap.wall[i] do
+                        --love.graphics.print(tostring(gamemap.wall[i][j].x1), j * 50, i * 10)
+			local xx1 = gamemap.wall[i][j].x1
+			local yy1 = gamemap.wall[i][j].y1
+			local xx2 = gamemap.wall[i][j].x2 
+			local yy2 = gamemap.wall[i][j].y2
+			love.graphics.line(xx1,yy1,xx2,yy2)
+			love.graphics.rectangle("line", xx1, yy1, xx2-xx1, yy2-yy1)
+                end
+        end
 	for i = 1, #gamemap.void do
-		local x1 = gamemap.void[i].x1+gamemap.x+gamemap.xoffset
-		local y1 = gamemap.void[i].y1+gamemap.y+gamemap.yoffset
-		local x2 = gamemap.void[i].x2+gamemap.x+gamemap.xoffset
-		local y2 = gamemap.void[i].y2+gamemap.y+gamemap.yoffset
+		local x1 = gamemap.void[i].x1
+		local y1 = gamemap.void[i].y1
+		local x2 = gamemap.void[i].x2
+		local y2 = gamemap.void[i].y2
 		love.graphics.line(x1,y1,x2,y2)
 		love.graphics.rectangle("line", x1, y1, x2-x1, y2-y1)
 	end
-
-	for i = 1, #gamemap.wall do
+	love.graphics.rotate( -math.pi/4 )
+	love.graphics.scale(1,1/(0.707))
+	love.graphics.translate( -gamemap.x -gamemap.GoffsetX, -gamemap.y -gamemap.GoffsetY )
+		for i = 1, #gamemap.wall do
                 for j = 1, #gamemap.wall[i] do
                         --love.graphics.print(tostring(gamemap.wall[i][j].x1), j * 50, i * 10)
 			local xx1 = gamemap.wall[i][j].x1+gamemap.x+gamemap.xoffset
@@ -197,4 +211,12 @@ function gamemap.draw()
 			love.graphics.rectangle("line", xx1, yy1, xx2-xx1, yy2-yy1)
                 end
         end
+	for i = 1, #gamemap.void do
+		local x1 = gamemap.void[i].x1+gamemap.x+gamemap.xoffset
+		local y1 = gamemap.void[i].y1+gamemap.y+gamemap.yoffset
+		local x2 = gamemap.void[i].x2+gamemap.x+gamemap.xoffset
+		local y2 = gamemap.void[i].y2+gamemap.y+gamemap.yoffset
+		love.graphics.line(x1,y1,x2,y2)
+		love.graphics.rectangle("line", x1, y1, x2-x1, y2-y1)
+	end
 end
