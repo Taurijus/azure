@@ -3,8 +3,8 @@ Shop = {}
 function Shop.load()
 	Shop.image = love.graphics.newImage(pre.."Shop.png")
 	Shop.List = {}
-    Shop.AddShop(300,150, 1)
-    Shop.AddShop(150,300, 2)
+    --Shop.AddShop(300,150, 1)
+   -- Shop.AddShop(150,300, 2)
 end
 
 function Shop.AddShop(xx, yy, weaponid)

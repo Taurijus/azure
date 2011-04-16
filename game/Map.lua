@@ -4,6 +4,12 @@ gamemap = {}
 
 function gamemap.load()
 	-- voidness coords (where player or dragon should not past)
+	gamemap.image = love.graphics.newImage("images/Baground1.png")
+	gamemap.x = -500
+	gamemap.y = -500
+	gamemap.xoffset = 500
+	gamemap.yoffset = 500
+	gamemap.rotatioset = -math.pi/4
 	gamemap['void'] = {}
 	gamemap.void[1] = {x1 = 0, y1 = 0, x2 = 0 + 158, y2 = 0 + 208}
 	gamemap.void[2] = {x1 = 159, y1 = 0, x2 = 159 + 468, y2 = 0 + 76}
@@ -118,38 +124,77 @@ function gamemap.load()
 	gamemap.hide[17][1] = {x1 = 638, y1 = 111, x2 = 638 + 26, y2 = 111 + 128}
 
 end
+function gamemap.voidTouch()
 
+	for i = 1, #gamemap.void do
+		local width = love.graphics.getWidth()
+		local height = love.graphics.getHeight()
+		local x1 = gamemap.void[i].x1+gamemap.x+gamemap.xoffset
+		local y1 = gamemap.void[i].y1+gamemap.y+gamemap.yoffset
+		local x2 = gamemap.void[i].x2+gamemap.x+gamemap.xoffset
+		local y2 = gamemap.void[i].y2+gamemap.y+gamemap.yoffset
+	--love.graphics.print(tostring(x1 .. " " .. y1), 0, i * 10)
+	--love.graphics.print(tostring(x2 .. " " .. y2), 0, i * 10)
+		if x1<width/2 and x2 >width/2 and y1<height/2 and y2 > height/2 then
+			return true
+		end
+	end 
+	return false
+end
+function gamemap.wallTouch()
+
+
+	for i = 1, #gamemap.wall do
+                for j = 1, #gamemap.wall[i] do
+                       local width = love.graphics.getWidth()
+			local height = love.graphics.getHeight()
+			local x1 = gamemap.wall[i][j].x1+gamemap.x+gamemap.xoffset
+			local y1 = gamemap.wall[i][j].y1+gamemap.y+gamemap.yoffset
+			local x2 = gamemap.wall[i][j].x2+gamemap.x+gamemap.xoffset
+			local y2 = gamemap.wall[i][j].y2+gamemap.y+gamemap.yoffset
+	--love.graphics.print(tostring(x1 .. " " .. y1), 0, i * 10)
+	--love.graphics.print(tostring(x2 .. " " .. y2), 0, i * 10)
+			if x1<width/2 and x2 >width/2 and y1<height/2 and y2 > height/2 then
+				return true
+			end
+                end
+        end
+end
 function gamemap.update()
 
 end
-
+function gamemap.transformX(xx, yy, zz, teta, gama, phi)
+return xx*(math.cos(gama)*math.cos(teta))+yy*(math.sin(gama)*math.cos(teta))+zz*(-math.sin(teta))
+end
+function gamemap.transformY(xx, yy, zz, teta, gama, phi)
+return  xx*(-math.sin(gama)*math.cos(phi)+math.sin(phi)*math.sin(teta)*math.cos(gama))+yy*(math.cos(phi)*math.cos(gama)+math.sin(phi)*math.sin(teta)*math.sin(gama))+zz*(math.sin(phi)*math.cos(teta))
+end
+function gamemap.transformZ(xx, yy, zz, teta, gama, phi)
+return 0
+end
 function gamemap.draw()
+	--love.graphics.draw(gamemap.image, gamemap.x, gamemap.y)
 	--[[ just for checking values
 	]]
+	
 	for i = 1, #gamemap.void do
-		love.graphics.print(tostring(gamemap.void[i].x1), 0, i * 10)
-		love.graphics.line              (gamemap.void[i].x1, gamemap.void[i].y1, gamemap.void[i].x2, gamemap.void[i].y2)
-		love.graphics.rectangle ("line", gamemap.void[i].x1, gamemap.void[i].y1, gamemap.void[i].x2 - gamemap.void[i].x1, gamemap.void[i].y2 - gamemap.void[i].y1)
+		local x1 = gamemap.void[i].x1+gamemap.x+gamemap.xoffset
+		local y1 = gamemap.void[i].y1+gamemap.y+gamemap.yoffset
+		local x2 = gamemap.void[i].x2+gamemap.x+gamemap.xoffset
+		local y2 = gamemap.void[i].y2+gamemap.y+gamemap.yoffset
+		love.graphics.line(x1,y1,x2,y2)
+		love.graphics.rectangle("line", x1, y1, x2-x1, y2-y1)
 	end
-	love.graphics.print("^ row of x1 of void coords upper left corner", 0, 220)
 
-	love.graphics.print("rows of x1 of wall coords upper left corner", 50, 0)
-	--[[
-	just for checking values; also example of how to loop through gamemap.wall
-	]]
 	for i = 1, #gamemap.wall do
-		for j = 1, #gamemap.wall[i] do
-			love.graphics.print(tostring(gamemap.wall[i][j].x1), j * 50, i * 10)
-		end
-	end
-
-	--[[
-	just for checking values; also example of how to loop through gamemap.hide
-	for i = 1, #gamemap.hide do
-		for j = 1, #gamemap.hide[i] do
-			love.graphics.print(tostring(gamemap.hide[i][j].x1), j * 50, i * 10)
-		end
-	end
-	]]
-
+                for j = 1, #gamemap.wall[i] do
+                        --love.graphics.print(tostring(gamemap.wall[i][j].x1), j * 50, i * 10)
+			local xx1 = gamemap.wall[i][j].x1+gamemap.x+gamemap.xoffset
+			local yy1 = gamemap.wall[i][j].y1+gamemap.y+gamemap.yoffset
+			local xx2 = gamemap.wall[i][j].x2+gamemap.x+gamemap.xoffset
+			local yy2 = gamemap.wall[i][j].y2+gamemap.y+gamemap.yoffset
+			love.graphics.line(xx1,yy1,xx2,yy2)
+			love.graphics.rectangle("line", xx1, yy1, xx2-xx1, yy2-yy1)
+                end
+        end
 end

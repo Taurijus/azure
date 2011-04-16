@@ -12,13 +12,13 @@ function love.load()
       dragon.load()
       PlayerI.load()
 	  Bullet.load ()
-	  gamemap.load()
+	  
 --	  sleepBar.load(100, 100)
 
 end
 
 function love.update(dt)
-	dragon.update(dt)
+	--dragon.update(dt)
 	PlayerI.update(dt)
 	Bullet.update (dt)
 	--sleepBar.update(dt, d)
@@ -28,10 +28,13 @@ function love.update(dt)
 end
 
 function love.draw()
-	dragon.draw()
+
+	
 	PlayerI.draw()
-	--sleepBar.draw()
-	gamemap.draw()
+	--dragon.draw()
+--sleepBar.draw()
+
+	
 end
 
 function love.quit()
