@@ -3,22 +3,32 @@ pre, src = 'game/', 'game/'
 
 dofile(src..'dragon.lua')
 dofile(src..'PlayerI.lua')
+dofile(src..'Map.lua')
 
 function love.load()
       dragon.load()
       PlayerI.load()
+	  gamemap.load()
 
 end
 
 function love.update(dt)
-        dragon.update(dt)
+	dragon.update(dt)
 	PlayerI.update(dt)
+	if love.keyboard.isDown("escape") then
+		love.quit()
+	end
 end
 
 function love.draw()
 	dragon.draw()
 	PlayerI.draw()
+	gamemap.draw()
 end
 
-
+function love.quit()
+	-- just some delay before quiting, to make impression we are saving the game
+	love.timer.sleep(1000)
+	love.event.push('q')
+end
 
