@@ -45,9 +45,10 @@ function PlayerI.update(dt)
 	if PlayerI.rot == nil then
 		PlayerI.rot = 0
 	end
-	if love.mouse.isDown("l") and Inventory.ammoNotEmpty() then
-		Inventory.shoot()
-		Bullet.AddShot(PlayerI.x, PlayerI.y,PlayerI.rot, 300)
+	if love.mouse.isDown("l") then
+		if Inventory.shoot() then
+			Bullet.AddShot(PlayerI.x, PlayerI.y,PlayerI.rot, 300)
+		end
 	end
 	Bullet.update(dt)
 end
