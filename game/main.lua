@@ -3,21 +3,21 @@ pre, src = 'images/', 'game/'
 
 dofile(src..'dragon.lua')
 dofile(src..'PlayerI.lua')
-dofile(src..'Bar.lua')
+--dofile(src..'Bar.lua')
 dofile(src..'Map.lua')
 
 function love.load()
       dragon.load()
       PlayerI.load()
 	  gamemap.load()
-	  sleepBar.load(100, 100)
+--	  sleepBar.load(100, 100)
 
 end
 
 function love.update(dt)
 	dragon.update(dt)
 	PlayerI.update(dt)
-	sleepBar.update(dt, d)
+	--sleepBar.update(dt, d)
 	if love.keyboard.isDown("escape") then
 		love.quit()
 	end
@@ -26,7 +26,7 @@ end
 function love.draw()
 	dragon.draw()
 	PlayerI.draw()
-	sleepBar.draw()
+	--sleepBar.draw()
 	gamemap.draw()
 end
 
