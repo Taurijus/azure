@@ -4,10 +4,14 @@ pre, src = 'game/', 'game/'
 dofile(src..'dragon.lua')
 dofile(src..'PlayerI.lua')
 
-function love.load()
-      dragon.load()
-      PlayerI.load()
 
+function love.load()
+      
+      
+      
+      PlayerI.load()
+      dragon.load()
+      
 end
 
 function love.update(dt)
@@ -16,8 +20,11 @@ function love.update(dt)
 end
 
 function love.draw()
+	
 	dragon.draw()
 	PlayerI.draw()
+	
+	
 end
 
 
