@@ -3,21 +3,31 @@ pre, src = 'game/', 'game/'
 
 dofile(src..'dragon.lua')
 dofile(src..'PlayerI.lua')
+dofile(src..'Shop.lua')
+dofile(src..'InventoryPlayerI.lua')
 
 function love.load()
-      dragon.load()
+      
+      
+      Shop.load()
+      Shop.AddShop(300,150)
+      Shop.AddShop(150,300)
       PlayerI.load()
-
+      dragon.load()
+      Inventory.load()
 end
 
-function love.update()
-        dragon.update()
-	PlayerI.update()
+function love.update(dt)
+        dragon.update(dt)
+	PlayerI.update(dt)
 end
 
 function love.draw()
+	Shop.draw()
 	dragon.draw()
 	PlayerI.draw()
+	Inventory.draw()
+	
 end
 
 
