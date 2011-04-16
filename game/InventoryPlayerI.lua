@@ -20,7 +20,8 @@ function Inventory.load()
 						maxammo = 1000,
 						bulletspeed = 2,
 						img = love.graphics.newImage(pre.."1.png"),
-						price = 0
+						price = 0,
+						cooldown = 0.1
 					}
 	
 	Inventory.weapon[2] = {
@@ -29,8 +30,10 @@ function Inventory.load()
 						maxammo = 1000,
 						bulletspeed = 2,
 						img = love.graphics.newImage(pre.."2.png"),
-						price = 0
+						price = 0,
+						cooldown = 0.5
 					}
+	Inventory.LastShot = 0
 	--TO DO fill the  weapons table
 end
 
@@ -95,5 +98,12 @@ end
 
 function Inventory.shoot()
 	local i = Inventory.actWeap
-	Inventory.weapon[i].ammo = Inventory.weapon[i].ammo - 1
+	if love.timer.getTime () - Inventory.LastShot > Inventory.weapon[i].cooldown then
+		if Inventory.ammoNotEmpty() then
+			Inventory.weapon[i].ammo = Inventory.weapon[i].ammo - 1
+			Inventory.LastShot = love.timer.getTime ()
+			return true
+		end
+	end
+	return false
 end
