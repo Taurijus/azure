@@ -1,7 +1,7 @@
 AIM = {}
 
 AIM.bazinis_greitis = 100
-AIM.kulkos_greitis = 150		-- bazinis kulkos greitis
+AIM.kulkos_greitis = 150	-- bazinis kulkos greitis
 AIM.max_health = 100
 AIM.min_health = 10				-- kada reikėtų susirūpinti
 AIM.startW = 1					-- pradinis waypoint, TO DO random
@@ -82,16 +82,12 @@ function AIM.create_bot()
 			
 				-- pradiniai parametrai
 			state = "gold",				-- pradinis state eina prie aukso
-			weapon = "none",			-- kiti ginklai: "weapon 1", "weapon 2" etc.
+			weapon = "none",			-- kiti ginklai: "ragatkė", "lankas" etc.
 			gold = 0,					-- pradžioje nėra aukso
 			fgold = 0,					-- pradžioje nėra ir "false" aukso
-			trap = 0,					-- kiek trap turi
+			trap = 0,
 			rot = 0,
-			health = AIM.max_health,	-- pradinės gyvybės or sth
-			speed_modifier = 1,			-- boto greičio keitiklis
-			bullet_speed = 200,
-			bullet_cooldown = 0.5,		-- kiek cooldown laukti
-			bot_cooldown_time = 0		-- kiek cooldown susikaupė
+			health = AIM.max_health		-- pradinės gyvybės or sth		
 		  }
 	
 end
@@ -108,11 +104,11 @@ function AIM.update(dt)
 	for i = 1, AIM.n do
 		AIM.choose_state(i)	
 		-- tada pažiūrim ar atėjom į waypoint
+		math.randomseed(os.time())
+		math.random()
+		BOT[i].speed_modifier = math.random(0.8, 1.2)			-- keičiasi boto greitis!
 		if W[BOT[i].kitasW][1] == BOT[i].x and W[BOT[i].kitasW][2] == BOT[i].y
 			then 											-- renkamės kitą wp
-				math.randomseed(os.time())
-				math.random()
-				BOT[i].speed_modifier = math.random(0.8, 1.2)			-- keičiasi boto greitis!
 				if BOT[i].state == "gold"
 					then
 						BOT[i].kitasW = W[BOT[i].kitasW][round(2.4 + math.random() + math.random(), 0)]
@@ -200,6 +196,9 @@ function AIM.sauti(i, dt, x1, y1)
 	end
 
 	if BOT[i].weapon ~= "none" then
+		if BOT[i].bot_cooldown_time == nil then
+			BOT[i].bot_cooldown_time = 0
+		end
 		if BOT[i].bot_cooldown_time >= BOT[i].bullet_cooldown
 			then
 				Bullet.AddShot(BOT[i].x, BOT[i].y, BOT[i].rot, BOT[i].bullet_speed)
@@ -214,20 +213,18 @@ end
 -- Vėliau reikėtų pridėti daugiau objektų, pvz. drakoną.
 -- Kam šaudyt į drakoną? :D
 function AIM.isNotVisible(x1, y1, x2, y2)		
-	for i = 1, #gamemap.wall do 				-- per visas sienas
-		for j = 1, #gamemap.wall[i] do  		-- per visus sienos stačiakampius		
-			local denom = (gamemap.wall[i][j].y2 - gamemap.wall[i][j].y1) * (x2 - x1) - (gamemap.wall[i][j].x2 - gamemap.wall[i][j].x1) * (y2 - y1)
-			if denom ~= 0 then
-				local ua = ((gamemap.wall[i][j].x2 - gamemap.wall[i][j].x1) * (y1 - gamemap.wall[i][j].y1) - (gamemap.wall[i][j].y2 - gamemap.wall[i][j].y1) * (x1 - gamemap.wall[i][j].x1)) / denom
-				if ua > 0 and ua < 1 then				
-					local ub = ((x2 - x1) * (y1 - gamemap.wall[i][j].y1) - (y2 - y1) * (x1 - gamemap.wall[i][j].x1)) / denom
-					if ub > 0 and ub < 1
-						then
-							return true	
-					end
+	for i = 1, #mapping.wall do 				-- per visas sienas
+		local denom = (mapping.wall[i].y2 - mapping.wall[i].y1) * (x2 - x1) - (mapping.wall[i].x2 - mapping.wall[i].x1) * (y2 - y1)
+		if denom ~= 0 then
+			local ua = ((mapping.wall[i].x2 - mapping.wall[i].x1) * (y1 - mapping.wall[i].y1) - (mapping.wall[i].y2 - mapping.wall[i].y1) * (x1 - mapping.wall[i].x1)) / denom
+			if ua > 0 and ua < 1 then				
+				local ub = ((x2 - x1) * (y1 - mapping.wall[i].y1) - (y2 - y1) * (x1 - mapping.wall[i].x1)) / denom
+				if ub > 0 and ub < 1
+					then
+						return true	
 				end
-			end	
-		end
+			end
+		end	
 	end
 	return false
 end

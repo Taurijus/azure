@@ -8,7 +8,7 @@ dofile(src..'bullet.lua')
 dofile(src..'AIM.lua')
 
 dofile(src..'Bar.lua')
-dofile(src..'Map.lua')
+dofile(src..'Mapping.lua')
 dofile (src..'Sounds.lua')
 
 function love.load()
@@ -25,7 +25,7 @@ function love.load()
     dragon.load()
     PlayerI.load()
 	Bullet.load ()
-	gamemap.load()
+	mapping.load()
 	sleepBar.load(0, 100, 36, 266)
 	healthBar.load(0, 350, 36, 266)
 	sounds.load ()
@@ -68,10 +68,12 @@ function love.update(dt)
 end
 
 function love.draw()
-	gamemap.draw()
+	mapping.draw()
 	dragon.draw()
 	PlayerI.draw()
 	AIM.draw()
+	-- WTF? why bullets are drawn under map???? io.OO
+	-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	--sleepBar.draw()
 	--healthBar.draw()
 end
