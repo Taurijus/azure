@@ -1,4 +1,3 @@
-Wall = {x1 = 100, y1 = 300, x2 = 300, y2 = 300}
 Bullet = {}
 function Bullet.load ()
 	Bullet.image = love.graphics.newImage ("images/tracer.png")
@@ -61,7 +60,7 @@ function Bullet.rectCross (bullet, obj)
 end
 
 function Bullet.draw()
-	for i , bullet in ipairs(Bullet.List) do
+	for i, bullet in ipairs(Bullet.List) do
 		love.graphics.draw(Bullet.image, bullet.x, bullet.y, bullet.r, 1, 1, 16, 16)
 	end
 end

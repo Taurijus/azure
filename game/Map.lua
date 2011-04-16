@@ -116,7 +116,6 @@ function gamemap.load()
 	gamemap.hide[16][1] = {x1 = 580, y1 = 340, x2 = 580 + 15, y2 = 40 + 63}
 	gamemap.hide[17] = {}
 	gamemap.hide[17][1] = {x1 = 638, y1 = 111, x2 = 638 + 26, y2 = 111 + 128}
-
 end
 
 function gamemap.update()
