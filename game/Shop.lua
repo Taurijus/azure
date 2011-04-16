@@ -5,8 +5,8 @@ function Shop.load()
 	Shop.w = 64
 	Shop.h = 64
 	Shop.List = {}
-    Shop.AddShop(300,150, 1)
-    Shop.AddShop(150,300, 2)
+    --Shop.AddShop(300,150, 1)
+   -- Shop.AddShop(150,300, 2)
 end
 
 function Shop.AddShop(xx, yy, weaponid)
