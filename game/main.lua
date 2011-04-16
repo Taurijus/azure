@@ -6,16 +6,17 @@ dofile(src..'PlayerI.lua')
 dofile(src..'bullet.lua')
 dofile(src..'AI.lua')
 
---dofile(src..'Bar.lua')
+dofile(src..'Bar.lua')
 dofile(src..'Map.lua')
 
 function love.load()
-      dragon.load()
-      PlayerI.load()
-      AI.load()
-	  Bullet.load ()
-	  gamemap.load()
---	  sleepBar.load(100, 100)
+    dragon.load()
+    PlayerI.load()
+    AI.load()
+	Bullet.load ()
+	gamemap.load()
+	sleepBar.load(0, 100, 36, 266)
+	healthBar.load(0, 350, 36, 266)
 
 end
 
@@ -24,7 +25,8 @@ function love.update(dt)
 	PlayerI.update(dt)
 	AI.update(dt)
 	Bullet.update (dt)
-	--sleepBar.update(dt, d)
+	sleepBar.update(dt, 0.5)
+	healthBar.update()
 	if love.keyboard.isDown("escape") then
 		love.quit()
 	end
@@ -35,7 +37,8 @@ function love.draw()
 	dragon.draw()
 	PlayerI.draw()
 	AI.draw()
-	--sleepBar.draw()
+	sleepBar.draw()
+	healthBar.draw()
 end
 
 function love.quit()
