@@ -139,9 +139,15 @@ function gamemap.draw()
 	]]
 	for i = 1, #gamemap.wall do
 		for j = 1, #gamemap.wall[i] do
-			love.graphics.print(tostring(gamemap.wall[i][j].x1), j * 50, i * 10)
+			love.graphics.rectangle ("line", gamemap.wall[i][j].x1, gamemap.wall[i][j].y1, gamemap.wall[i][j].x2 - gamemap.wall[i][j].x1, gamemap.wall[i][j].y2 - gamemap.wall[i][j].y1)
 		end
 	end
+	
+	--[[for i = 1, #gamemap.wall do
+		for j = 1, #gamemap.wall[i] do
+			love.graphics.print(tostring(gamemap.wall[i][j].x1), j * 50, i * 10)
+		end
+	end]]
 
 	--[[
 	just for checking values; also example of how to loop through gamemap.hide

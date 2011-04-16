@@ -12,7 +12,7 @@ AI = {}
 -- vėliau pagal koordinates bus galima apskaičiuoti artimiausią ar pan...
 
 W = {}
-W[1] = {700, 630, 2, 2, 2, 2} -- spawn
+W[1] = {700, 630, 2, 2, 2, 2} -- spawn point 1
 W[2] = {560, 630, 3, 3, 3, 3}
 W[3] = {470, 630, 4, 4, 4, 4}
 W[4] = {350, 630, 6, 6, 6, 6}
@@ -36,6 +36,8 @@ W[21] = {480, 540, 6, 6, 6, 6}
 W[22] = {650, 90, 13, 13, 13, 13}
 
 AI.bazinis_greitis = 50
+AI.rot = 0
+AI.kulkos_greitis = 300
 
 function AI.load()
 	AI.image = love.graphics.newImage(pre.."AI.gif")
@@ -49,13 +51,13 @@ function AI.load()
 	-- pradiniai parametrai
 	AI.state = "gold"				-- pradinis state eina prie aukso
 									-- kiti galimi state "health", "weapon", "hunt"
-	AI.weapon = "none"				-- ginklo nėra
+	AI.weapon = "random"			-- kiti ginklai: "ragatkė", "lankas" etc.
+	--AI.weapon = "none"
 	AI.gold = 0						-- pradžioje nėra aukso
 	AI.health = 100					-- pradinės gyvybės or sth
 	AI.min_health = 10				-- kada reikėtų susirūpinti
 	AI.weapon_cost = 100			-- tarkim ginklo kaina
 
-	
 end
 
 function AI.update(dt)	
@@ -95,9 +97,12 @@ function AI.update(dt)
 
 	end
 	
-	-- jei jo, renkamės kitą waypoint
-	-- reikia funkcijos iš map'o, kad pažiūrėt paviršių pagal koord
-	-- pagal paviršių keisis judėjimo greitis
+	-- šaudom į žaidėją, jeigu matomas. vėliau į kitus AI
+	if isNotVisible(AI.x, AI.y, PlayerI.x, PlayerI.y) == false
+		then
+			AI.sauti(PlayerI.x, PlayerI.y)
+	end
+	
 end
 
 
@@ -105,7 +110,7 @@ function AI.draw()
     local text = greitis.." "..AI.kitasW.." "..W[AI.kitasW][1].." "..W[AI.kitasW][2].." "..AI.x.." "..AI.y
 	local width = love.graphics.getWidth()
 	local height = love.graphics.getHeight()
-	love.graphics.draw(AI.image, AI.x, AI.y, 0, 1, 1, 32, 32) -- 0 -rotation
+	love.graphics.draw(AI.image, AI.x, AI.y, AI.rot, 1, 1, 32, 32)
 	love.graphics.print(text, 500, 500)
 end
 
@@ -127,4 +132,45 @@ function AI.choose_state()
 					AI.state = "hunt"
 			end
 	end
+end
+
+-- Funkcija, šaunanti x1 y1 kryptimi (nesvarbu ar yra siena)
+-- x1, y1 - player koordinatės
+function AI.sauti(x1, y1)
+	local dx, dy
+	dx = x1-AI.x
+	dy = y1-AI.y
+
+	AI.rot = math.acos(dx/(math.sqrt(dx*dx+dy*dy)))*(dy/math.abs(dy))
+	if AI.rot == nil then
+		AI.rot = 0
+	end
+
+	if AI.weapon ~= "none" then
+			Bullet.AddShot(AI.x, AI.y, AI.rot, AI.kulkos_greitis)
+		end
+end
+
+-- Funkcija nusako ar tarp dviejų koordinačių porų yra sienų, ar nėra.
+-- Vėliau reikėtų pridėti daugiau objektų, pvz. drakoną.
+-- Kam šaudyt į drakoną? :D
+function isNotVisible(x1, y1, x2, y2)
+	
+	
+	for i = 1, #gamemap.wall do 				-- per visas sienas
+		for j = 1, #gamemap.wall[i] do  		-- per visus sienos stačiakampius		
+			local denom = (gamemap.wall[i][j].y2 - gamemap.wall[i][j].y1) * (x2 - x1) - (gamemap.wall[i][j].x2 - gamemap.wall[i][j].x1) * (y2 - y1)
+			if denom ~= 0 then
+				local ua = ((gamemap.wall[i][j].x2 - gamemap.wall[i][j].x1) * (y1 - gamemap.wall[i][j].y1) - (gamemap.wall[i][j].y2 - gamemap.wall[i][j].y1) * (x1 - gamemap.wall[i][j].x1)) / denom
+				if ua > 0 and ua < 1 then				
+					local ub = ((x2 - x1) * (y1 - gamemap.wall[i][j].y1) - (y2 - y1) * (x1 - gamemap.wall[i][j].x1)) / denom
+					if ub > 0 and ub < 1
+						then
+							return true	
+					end
+				end
+			end	
+		end
+	end
+	return false
 end
