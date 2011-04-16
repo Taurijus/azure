@@ -1,11 +1,12 @@
 AIM = {}
 
 AIM.bazinis_greitis = 100
-AIM.kulkos_greitis = 300
+AIM.kulkos_greitis = 150		-- bazinis kulkos greitis
 AIM.max_health = 100
 AIM.min_health = 10				-- kada reikėtų susirūpinti
 AIM.startW = 1					-- pradinis waypoint, TO DO random
 AIM.delta = 0					-- pradinis laiko momentas
+AIM.max_bot = 8					-- botų skaičius
 
 -- waypoints, idėja paveikslėly /images/map_with_waypoints.png
 -- veikia taip. masyvo eilės numeris yra waypoint'o numeris
@@ -81,14 +82,16 @@ function AIM.create_bot()
 			
 				-- pradiniai parametrai
 			state = "gold",				-- pradinis state eina prie aukso
-										-- kiti galimi state "health", "weapon", "hunt", "spawn"
-			weapon = "none",			-- kiti ginklai: "ragatkė", "lankas" etc.
-			--AI.weapon = "none"
+			weapon = "none",			-- kiti ginklai: "weapon 1", "weapon 2" etc.
 			gold = 0,					-- pradžioje nėra aukso
 			fgold = 0,					-- pradžioje nėra ir "false" aukso
-			trap = 0,
+			trap = 0,					-- kiek trap turi
 			rot = 0,
-			health = AIM.max_health		-- pradinės gyvybės or sth		
+			health = AIM.max_health,	-- pradinės gyvybės or sth
+			speed_modifier = 1,			-- boto greičio keitiklis
+			bullet_speed = 200,
+			bullet_cooldown = 0.5,		-- kiek cooldown laukti
+			bot_cooldown_time = 0		-- kiek cooldown susikaupė
 		  }
 	
 end
@@ -97,56 +100,42 @@ function AIM.update(dt)
 	AIM.delta = AIM.delta + dt
 	math.randomseed(os.time())
 	math.random()
-	if AIM.delta > math.random(5, 10) and AIM.n < 5
+	if AIM.delta > math.random(5, 10) and AIM.n < AIM.max_bot
 		then AIM.create_bot()
 			 AIM.delta = 0
 	end
     greitis = AIM.bazinis_greitis * dt
 	for i = 1, AIM.n do
-		-- šiaip info
-	--local text1 = AIM.n
-    --local text2 = "health: ".. AI.health.." false gold: "..AI.fgold.." gold: "..AI.gold
-    --local text3 = "next wp: "..AI.kitasW.." trap: "..AI.trap
-	--love.graphics.print(text1, 700, 680)
-	--love.graphics.print(text2, 700, 710)
-	--love.graphics.print(text3, 700, 730)
-	
-	
 		AIM.choose_state(i)	
 		-- tada pažiūrim ar atėjom į waypoint
 		if W[BOT[i].kitasW][1] == BOT[i].x and W[BOT[i].kitasW][2] == BOT[i].y
 			then 											-- renkamės kitą wp
+				math.randomseed(os.time())
+				math.random()
+				BOT[i].speed_modifier = math.random(0.8, 1.2)			-- keičiasi boto greitis!
 				if BOT[i].state == "gold"
 					then
-						math.randomseed(os.time())
-						math.random()
 						BOT[i].kitasW = W[BOT[i].kitasW][round(2.4 + math.random() + math.random(), 0)]
 					elseif BOT[i].state == "spawn"
 							then
-								math.randomseed(os.time())
-								math.random()
 								BOT[i].kitasW = W[BOT[i].kitasW][round(4.4 + math.random() + math.random(), 0)]
 							elseif BOT[i].state == "weapon"
 									then
-										math.randomseed(os.time())
-										math.random()
 										BOT[i].kitasW = W[BOT[i].kitasW][round(6.4 + math.random() + math.random(), 0)]
 									elseif BOT[i].state == "hunt"
 										then
-											math.randomseed(os.time())
-											math.random()
 											BOT[i].kitasW = W[BOT[i].kitasW][round(8.4 + math.random() + math.random(), 0)]
 										end
 			else 	-- einam toliau link waypoint
 			
 				if (W[BOT[i].kitasW][1] - BOT[i].x < 0)				-- (jei neigiamas)
-					then BOT[i].x = BOT[i].x - greitis
-					else BOT[i].x = BOT[i].x + greitis
+					then BOT[i].x = BOT[i].x - greitis * BOT[i].speed_modifier
+					else BOT[i].x = BOT[i].x + greitis * BOT[i].speed_modifier
 				end
 					
 				if (W[BOT[i].kitasW][2] - BOT[i].y < 0)  			-- (jei neigiamas)
-					then BOT[i].y = BOT[i].y - greitis
-					else BOT[i].y = BOT[i].y + greitis		
+					then BOT[i].y = BOT[i].y - greitis * BOT[i].speed_modifier
+					else BOT[i].y = BOT[i].y + greitis * BOT[i].speed_modifier	
 				end
 				-- jeigu esam taip arti, kad mažiau už vieno judesio atstumą
 				if math.abs(W[BOT[i].kitasW][1] - BOT[i].x) <= 2 then BOT[i].x = W[BOT[i].kitasW][1] end
@@ -157,7 +146,7 @@ function AIM.update(dt)
 		-- šaudom į žaidėją, jeigu matomas. vėliau į kitus AI
 		if AIM.isNotVisible(BOT[i].x, BOT[i].y, PlayerI.x, PlayerI.y) == false
 			then
-				AIM.sauti(i, PlayerI.x, PlayerI.y)
+				AIM.sauti(i, dt, PlayerI.x, PlayerI.y)
 		end
 		
 		--atnaujinam inventorių, jei įmanoma
@@ -170,6 +159,7 @@ function AIM.draw()
 	for i = 1, AIM.n do
 		love.graphics.draw(BOT[i].image, BOT[i].x, BOT[i].y, BOT[i].rot, 1, 1, 32, 32)
 	end
+	AIM.botu_info()
 end
 
 function AIM.choose_state(i)
@@ -199,7 +189,7 @@ end
 
 -- Funkcija, šaunanti x1 y1 kryptimi (nesvarbu ar yra siena)
 -- x1, y1 - player koordinatės
-function AIM.sauti(i, x1, y1)
+function AIM.sauti(i, dt, x1, y1)
 	local dx, dy
 	dx = x1-BOT[i].x
 	dy = y1-BOT[i].y
@@ -210,7 +200,13 @@ function AIM.sauti(i, x1, y1)
 	end
 
 	if BOT[i].weapon ~= "none" then
-			Bullet.AddShot(BOT[i].x, BOT[i].y, BOT[i].rot, AIM.kulkos_greitis)
+		if BOT[i].bot_cooldown_time >= BOT[i].bullet_cooldown
+			then
+				Bullet.AddShot(BOT[i].x, BOT[i].y, BOT[i].rot, BOT[i].bullet_speed)
+				BOT[i].bot_cooldown_time = math.random(-1 * BOT[i].bullet_cooldown/2, BOT[i].bullet_cooldown/2)	-- truputį modinam cooldown'ą
+			else
+				BOT[i].bot_cooldown_time = BOT[i].bot_cooldown_time + dt
+		end
 	end
 end
 
@@ -247,9 +243,11 @@ function AIM.update_inventory(i)
 
 	if BOT[i].x == W[5][1] and BOT[i].y == W[5][2]
 		then
-			if self.gold >= Inventory.weapon[1].price then
-				self.weapon = "weapon 1"
-				self.gold = self.gold - Inventory.weapon[1].price
+			if BOT[i].gold >= Inventory.weapon[1].price then
+				BOT[i].weapon = "weapon 1"
+				BOT[i].gold = BOT[i].gold - Inventory.weapon[1].price
+				BOT[i].bullet_speed = Inventory.weapon[1].bulletspeed * AIM.kulkos_greitis
+				BOT[i].bullet_cooldown = Inventory.weapon[1].cooldown
 			end
 	end
 	
@@ -258,6 +256,8 @@ function AIM.update_inventory(i)
 			if BOT[i].gold >= Inventory.weapon[2].price then
 				BOT[i].weapon = "weapon 2"
 				BOT[i].gold = BOT[i].gold - Inventory.weapon[2].price
+				BOT[i].bullet_speed = Inventory.weapon[2].bulletspeed * AIM.kulkos_greitis
+				BOT[i].bullet_cooldown = Inventory.weapon[2].cooldown
 			end
 	end
 	
@@ -266,6 +266,8 @@ function AIM.update_inventory(i)
 			if BOT[i].gold >= Inventory.weapon[3].price then
 				BOT[i].weapon = "weapon 3"
 				BOT[i].gold = BOT[i].gold - Inventory.weapon[3].price
+				BOT[i].bullet_speed = Inventory.weapon[3].bulletspeed * AIM.kulkos_greitis
+				BOT[i].bullet_cooldown = Inventory.weapon[3].cooldown
 			end
 	end
 	
@@ -274,6 +276,8 @@ function AIM.update_inventory(i)
 			if BOT[i].gold >= Inventory.weapon[4].price then
 				BOT[i].weapon = "weapon 4"
 				BOT[i].gold = BOT[i].gold - Inventory.weapon[4].price
+				BOT[i].bullet_speed = Inventory.weapon[4].bulletspeed * AIM.kulkos_greitis
+				BOT[i].bullet_cooldown = Inventory.weapon[4].cooldown
 			end
 	end
 	
@@ -297,4 +301,13 @@ function AIM.update_inventory(i)
 			BOT[i].trap = 1
 	end
 	
+end
+
+function AIM.botu_info()
+	text1 = "Botu sk: "..AIM.n
+	love.graphics.print(text1, 650, 500)
+	for i = 1, AIM.n do
+	text2 = "Bot "..i.." ginklas: "..BOT[i].weapon.." state: "..BOT[i].state.." gold: ".. BOT[i].gold.." wp: "..BOT[i].kitasW
+		love.graphics.print(text2, 700, 500 + i * 20)
+	end
 end
