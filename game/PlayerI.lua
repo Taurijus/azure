@@ -19,9 +19,8 @@ function PlayerI.update(dt)
     end
     if love.keyboard.isDown("down") then
 	PlayerI.y = PlayerI.y + 100 * dt
+	end
 end
-end
-
 
 function PlayerI.draw()
 	love.graphics.draw(PlayerI.image, PlayerI.x, PlayerI.y)

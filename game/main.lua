@@ -4,25 +4,24 @@ pre, src = 'game/', 'game/'
 dofile(src..'dragon.lua')
 dofile(src..'PlayerI.lua')
 dofile(src..'Bar.lua')
-
+	
 function love.load()
-      dragon.load()
-      PlayerI.load()
-	  sleepBar.load(100, 100)
-
+    dragon.load()
+    PlayerI.load()
+	sleepBar.load(0, 75, 36, 266)
+	healthBar.load(0, 350, 36, 266)
 end
 
 function love.update(dt)
     dragon.update(dt)
 	PlayerI.update(dt)
-	sleepBar.update(dt, d)
+	sleepBar.update(dt, 1)
+	healthBar.update()
 end
 
 function love.draw()
 	dragon.draw()
 	PlayerI.draw()
 	sleepBar.draw()
+	healthBar.draw()
 end
-
-
-
