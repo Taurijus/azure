@@ -12,10 +12,18 @@ function PlayerI.load()
     local height = love.graphics.getHeight()
 	PlayerI.x = width/2
 	PlayerI.y = height/2
+	PlayerI.w = 64
+	PlayerI.h = 64
 	PlayerI.rot = 0
 	PlayerI.offx = 32
 	PlayerI.offy = 32
 	PlayerI.TriggerLock = 0
+	--Player physics
+	phyPl = {}
+    phyPl.b = love.physics.newBody(world, PlayerI.x, PlayerI.x, 1,0)
+    phyPl.s = love.physics.newRectangleShape(phyPl.b, -1*PlayerI.offx, -1*PlayerI.offy, PlayerI.w, PlayerI.h, 0)
+    phyPl.s:setData("Player")
+	phyPl.s:setSensor(true)
 	Inventory.load()
 	Bullet.load()
 end
@@ -34,10 +42,9 @@ function PlayerI.update(dt)
     if love.keyboard.isDown("down") or love.keyboard.isDown("f") then
 		PlayerI.y = PlayerI.y + 100 * dt
 	end
-	local shopid = Shop.OnShop(PlayerI.x, PlayerI.y) 
-	if shopid >0 then
-		Inventory.BuyWeapon(shopid, dt)
-	end
+	--Physics coord move
+	phyPl.b:setX(PlayerI.x)	
+	phyPl.b:setY(PlayerI.y)
 	local dx, dy
 	dx = x-PlayerI.x
 	dy = y-PlayerI.y

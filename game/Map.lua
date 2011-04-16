@@ -57,7 +57,7 @@ function gamemap.load()
 	gamemap.wall[9][1] = {x1 = 206, y1 = 600, x2 = 206 + 355, y2 = 600 + 14}
 	gamemap.wall[10] = {}
 	gamemap.wall[10][1] = {x1 = 221, y1 = 247, x2 = 221 + 96, y2 = 247 + 15}
-	gamemap.wall[10][2] = {x1 = 303, y1 = 247, x2 = 202 + 14, y2 = 247 + 35}
+	gamemap.wall[10][2] = {x1 = 303, y1 = 247, x2 = 303 + 14, y2 = 247 + 35}
 	gamemap.wall[11] = {}
 	gamemap.wall[11][1] = {x1 = 303, y1 = 346, x2 = 303 + 14, y2 = 346 + 94}
 	gamemap.wall[12] = {}
@@ -139,9 +139,15 @@ function gamemap.draw()
 	]]
 	for i = 1, #gamemap.wall do
 		for j = 1, #gamemap.wall[i] do
-			love.graphics.print(tostring(gamemap.wall[i][j].x1), j * 50, i * 10)
+			love.graphics.rectangle ("line", gamemap.wall[i][j].x1, gamemap.wall[i][j].y1, gamemap.wall[i][j].x2 - gamemap.wall[i][j].x1, gamemap.wall[i][j].y2 - gamemap.wall[i][j].y1)
 		end
 	end
+	
+	--[[for i = 1, #gamemap.wall do
+		for j = 1, #gamemap.wall[i] do
+			love.graphics.print(tostring(gamemap.wall[i][j].x1), j * 50, i * 10)
+		end
+	end]]
 
 	--[[
 	just for checking values; also example of how to loop through gamemap.hide

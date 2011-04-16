@@ -77,7 +77,7 @@ function Inventory.draw()
 	love.graphics.draw(Inventory.weapon[i].img, Inventory.x+offsetx, Inventory.y+10)
 	love.graphics.print(Inventory.weapon[i].ammo, Inventory.x, Inventory.y+10)
 	--Helps config buying speed
-	--love.graphics.print(tobuy, Inventory.x, Inventory.y+10)
+	--love.graphics.print(tobuy, Inventory.x+ 300, Inventory.y+10)
 end
 
 function Inventory.ammoNotEmpty()
