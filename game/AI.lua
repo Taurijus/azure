@@ -41,8 +41,10 @@ function AI.load()
 	AI.image = love.graphics.newImage(pre.."AI.gif")
 	local width = love.graphics.getWidth()
     local height = love.graphics.getHeight()
-	AI.x = W[12][1]										------------------------------- TODO pradinis waypoint pakeisti
-	AI.y = W[12][2]
+    AI.startW = 12					-- pradinis waypoint, TO DO random
+    AI.kitasW = W[AI.startW][3]		-- pradinis sekantis waypoint, pirma nori goldo
+	AI.x = W[AI.startW][1]
+	AI.y = W[AI.startW][2]
 	
 	-- pradiniai parametrai
 	AI.state = "gold"				-- pradinis state eina prie aukso
@@ -52,7 +54,7 @@ function AI.load()
 	AI.health = 100					-- pradinės gyvybės or sth
 	AI.min_health = 10				-- kada reikėtų susirūpinti
 	AI.weapon_cost = 100			-- tarkim ginklo kaina
-	AI.kitasW = 6					-- koks sekantis waypoint
+
 	
 end
 
@@ -88,12 +90,9 @@ function AI.update(dt)
 				else AI.y = AI.y + greitis		
 			end
 			-- jeigu esam taip arti, kad mažiau už vieno judesio atstumą  -- TODO - pataisyti teleportus
-			if math.abs(W[AI.kitasW][1] - AI.x) <= 2 or
-			   math.abs(W[AI.kitasW][2] - AI.y) <= 2
-			   then
-					AI.x = W[AI.kitasW][1]
-					AI.y = W[AI.kitasW][2]			   
-			   end
+			if math.abs(W[AI.kitasW][1] - AI.x) <= 2 then AI.x = W[AI.kitasW][1] end
+			if math.abs(W[AI.kitasW][2] - AI.y) <= 2 then AI.y = W[AI.kitasW][2] end
+
 	end
 	
 	-- jei jo, renkamės kitą waypoint
