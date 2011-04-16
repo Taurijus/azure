@@ -7,14 +7,14 @@ PlayerI = {}
 
 function PlayerI.load()
 	Shop.load()
-    Shop.AddShop(300,150)
-    Shop.AddShop(150,300)
 	PlayerI.image = love.graphics.newImage(pre.."4.png")
 	local width = love.graphics.getWidth()
     local height = love.graphics.getHeight()
 	PlayerI.x = width/2
 	PlayerI.y = height/2
 	PlayerI.rot = 0
+	PlayerI.offx = 32
+	PlayerI.offy = 32
 	Inventory.load()
 	Bullet.load()
 end
@@ -33,8 +33,9 @@ function PlayerI.update(dt)
     if love.keyboard.isDown("down") or love.keyboard.isDown("f") then
 		PlayerI.y = PlayerI.y + 100 * dt
 	end
-	if Shop.OnShop(PlayerI.x, PlayerI.y) >0 and Inventory.loaded() == 0 then
-		Inventory.AddWeapon(Shop.OnShop(PlayerI.x, PlayerI.y))
+	local shopid = Shop.OnShop(PlayerI.x, PlayerI.y) 
+	if shopid >0 then
+		Inventory.BuyWeapon(shopid, dt)
 	end
 	local dx, dy
 	dx = x-PlayerI.x
@@ -44,10 +45,7 @@ function PlayerI.update(dt)
 	if PlayerI.rot == nil then
 		PlayerI.rot = 0
 	end
-	if love.mouse.isDown("l") and Inventory.loaded() > 0 then
-		-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		-- wtf? why does inventor move on rotation
-		-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	if love.mouse.isDown("l") and Inventory.ammoNotEmpty() then
 		Inventory.shoot()
 		Bullet.AddShot(PlayerI.x, PlayerI.y,PlayerI.rot, 300)
 	end
@@ -60,18 +58,6 @@ function PlayerI.draw()
 	local height = love.graphics.getHeight()
 	Shop.draw()
 	Bullet.draw()
-
-	--[[love.graphics.translate(PlayerI.x, PlayerI.y)
-	love.graphics.rotate(PlayerI.rot)
-	love.graphics.translate(-PlayerI.x, -PlayerI.y)]]
-
-	love.graphics.draw(PlayerI.image, PlayerI.x, PlayerI.y, PlayerI.rot, 1, 1, 32, 32)
-
-	--[[
-	love.graphics.translate(PlayerI.x, PlayerI.y)
-	love.graphics.rotate(-PlayerI.rot)
-	love.graphics.translate(-PlayerI.x, -PlayerI.y)
-	]]
-
+	love.graphics.draw(PlayerI.image, PlayerI.x, PlayerI.y, PlayerI.rot, 1, 1, PlayerI.offx, PlayerI.offy)	
 	Inventory.draw()
 end

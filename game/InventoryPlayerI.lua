@@ -1,20 +1,66 @@
 Inventory = {}
 
+--Helps config shops
+local tobuy = 0
+local deltaBuy = 0
+
+
 function Inventory.load()
 	Inventory.image = love.graphics.newImage(pre.."inventory.png")
-	Inventory.bfg = love.graphics.newImage(pre.."1.png")
-	Inventory.Dinamitas = love.graphics.newImage(pre.."2.png")
-	Inventory.Ragatke = love.graphics.newImage(pre.."3.png")
+	--Inventory.bfg = love.graphics.newImage(pre.."1.png")
+	--Inventory.Dinamitas = love.graphics.newImage(pre.."2.png")
+	--Inventory.Ragatke = love.graphics.newImage(pre.."3.png")
 	Inventory.x = 0
 	Inventory.y = 600-160
-	Inventory.weapon = 0
-	Inventory.Ammo = 0
+	Inventory.actWeap = 1
+	Inventory.weapon = {}
+	Inventory.weapon[1] = {
+						buyspeed = 1,
+						ammo = 100,
+						maxammo = 1000,
+						bulletspeed = 2,
+						img = love.graphics.newImage(pre.."1.png"),
+						price = 0
+					}
+	
+	Inventory.weapon[2] = {
+						buyspeed = 1,
+						ammo = 200,
+						maxammo = 1000,
+						bulletspeed = 2,
+						img = love.graphics.newImage(pre.."2.png"),
+						price = 0
+					}
+	--TO DO fill the  weapons table
 end
 
-function Inventory.AddWeapon(nr)
-	Inventory.weapon = nr
-	Inventory.Ammo = 500
+function round(num, idp)
+  return tonumber(string.format("%." .. (idp or 0) .. "f", num))
 end
+
+function Inventory.BuyWeapon(nr, dt)
+	local newDelta = dt*Inventory.weapon[nr].buyspeed*5
+	Inventory.actWeap = nr
+	--TODO CONFIG BUYING SPEED, dt is around 0.017
+	tobuy = round(newDelta, 0)
+	if tobuy < 1 then
+		deltaBuy = deltaBuy + newDelta
+		if deltaBuy > 1 then
+			deltaBuy = 0
+			tobuy = 1
+		end
+	else
+		deltabuy = 0
+	end
+	if Inventory.weapon[nr].ammo + tobuy > Inventory.weapon[nr].maxammo then
+		tobuy = Inventory.weapon[nr].maxammo - Inventory.weapon[nr].ammo 
+	end
+	Inventory.weapon[nr].ammo = Inventory.weapon[nr].ammo + tobuy
+end
+
+
+
+
 
 function Inventory.update(dt)
 
@@ -23,33 +69,31 @@ end
 
 function Inventory.draw()
 	local offsetx = 30
+	local i = Inventory.actWeap
 	love.graphics.draw(Inventory.image, Inventory.x, Inventory.y)
-	if Inventory.weapon == 1 then 
-		love.graphics.draw(Inventory.bfg, Inventory.x+offsetx, Inventory.y+10)
-	end
-		
-	if Inventory.weapon == 2 then 
-		love.graphics.draw(Inventory.Dinamitas, Inventory.x+offsetx, Inventory.y+10)
-	end
-	if Inventory.weapon == 3 then 
-		love.graphics.draw(Inventory.Ragatke, Inventory.x+offsetx, Inventory.y+10)
-	end
-	love.graphics.print(Inventory.Ammo, Inventory.x, Inventory.y+10)
+	love.graphics.draw(Inventory.weapon[i].img, Inventory.x+offsetx, Inventory.y+10)
+	love.graphics.print(Inventory.weapon[i].ammo, Inventory.x, Inventory.y+10)
+	--Helps config buying speed
+	--love.graphics.print(tobuy, Inventory.x, Inventory.y+10)
 end
 
-function Inventory.loaded()
-	return math.min(Inventory.weapon, Inventory.Ammo)
+function Inventory.ammoNotEmpty()
+	local i = Inventory.actWeap
+	if Inventory.weapon[i].ammo > 0 then
+		return true
+	end	
+	return false
 end
 
-function Inventory.gun()
-	return Inventory.weapon
+function Inventory.getWeap()
+	return Inventory.actWeap
+end
+
+function Inventory.setWrap(nr)
+	Inventory.actWeap = nr
 end
 
 function Inventory.shoot()
-	if Inventory.Ammo == 1 then
-		Inventory.Ammo = Inventory.Ammo -1
-		Inventory.weapon = 0
-	else
-		Inventory.Ammo = Inventory.Ammo -1
-	end	
+	local i = Inventory.actWeap
+	Inventory.weapon[i].ammo = Inventory.weapon[i].ammo - 1
 end

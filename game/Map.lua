@@ -132,9 +132,6 @@ function gamemap.draw()
 		love.graphics.rectangle ("line", gamemap.void[i].x1, gamemap.void[i].y1, gamemap.void[i].x2 - gamemap.void[i].x1, gamemap.void[i].y2 - gamemap.void[i].y1)
 	end
 	love.graphics.print("^ row of x1 of void coords upper left corner", 0, 220)
-	-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	-- due to some translations, text is displayed funny ^ and down there too v
-	-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	love.graphics.print("rows of x1 of wall coords upper left corner", 50, 0)
 	--[[
