@@ -95,5 +95,5 @@ end
 
 function Inventory.shoot()
 	local i = Inventory.actWeap
-	Inventory.weapon[i].ammo = Inventory.weapon[i].ammo - 1
+	--Inventory.weapon[i].ammo = Inventory.weapon[i].ammo - 1
 end
