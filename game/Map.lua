@@ -57,7 +57,7 @@ function gamemap.load()
 	gamemap.wall[9][1] = {x1 = 206, y1 = 600, x2 = 206 + 355, y2 = 600 + 14}
 	gamemap.wall[10] = {}
 	gamemap.wall[10][1] = {x1 = 221, y1 = 247, x2 = 221 + 96, y2 = 247 + 15}
-	gamemap.wall[10][2] = {x1 = 303, y1 = 247, x2 = 202 + 14, y2 = 247 + 35}
+	gamemap.wall[10][2] = {x1 = 303, y1 = 247, x2 = 303 + 14, y2 = 247 + 35}
 	gamemap.wall[11] = {}
 	gamemap.wall[11][1] = {x1 = 303, y1 = 346, x2 = 303 + 14, y2 = 346 + 94}
 	gamemap.wall[12] = {}
