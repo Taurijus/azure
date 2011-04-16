@@ -1,16 +1,16 @@
 dragon = {}
 function dragon.load()
-	image = love.graphics.newImage("images/padariukas.png")
-	x = 0;
-	y = 0;
+	dragon.image = love.graphics.newImage("images/padariukas.png")
+	dragon.x = 0;
+	dragon.y = 0;
 end
 
 function dragon.update(dt)
-x = x+1;
-y = y+1;
+dragon.x = dragon.x+1;
+dragon.y = dragon.y+1;
 end
 
 
 function dragon.draw()
-	love.graphics.draw(image, x, y)
+	love.graphics.draw(dragon.image, dragon.x, dragon.y)
 end
