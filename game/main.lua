@@ -23,13 +23,18 @@ function love.load()
 	world:setAllowSleep(false)
     dragon.load()
     PlayerI.load()
-    AI.load()
+    --AI.load()
 	Bullet.load ()
 	gamemap.load()
 	sleepBar.load(0, 100, 36, 266)
 	healthBar.load(0, 350, 36, 266)
 	sounds.load ()
-
+	
+	bots = {}
+	bots[1] = AI
+	bots[2] = AI
+	bots[1]:load()
+	bots[2]:load()
 end
 
 function add(a, b, coll)
@@ -54,7 +59,9 @@ function love.update(dt)
     dlt = dt
 	dragon.update(dt)
 	PlayerI.update(dt)
-	AI.update(dt)
+	--AI.update(dt)
+	bots[1]:update(dt)
+	bots[2]:update(dt)
 	Bullet.update (dt)
 	sleepBar.update(dt, 0.5)
 	healthBar.update()
@@ -69,7 +76,9 @@ function love.draw()
 	gamemap.draw()
 	dragon.draw()
 	PlayerI.draw()
-	AI.draw()
+	--AI.draw()
+	bots[1]:draw()
+	bots[2]:draw()
 	--sleepBar.draw()
 	--healthBar.draw()
 end
