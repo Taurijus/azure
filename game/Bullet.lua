@@ -1,8 +1,8 @@
 Wall = {x1 = 100, y1 = 300, x2 = 300, y2 = 300}
 Bullet = {}
 function Bullet.load ()
-	--Bullet.image = love.graphics.newImage ("images/tracer.png")
-	Bullet.image = love.graphics.newImage(pre.."5.png")
+	Bullet.image = love.graphics.newImage ("images/tracer.png")
+	--Bullet.image = love.graphics.newImage(pre.."5.png")
 	Bullet.List = {}
 	Bullet.Count = 0
 	Bullet.LastDT = 1
