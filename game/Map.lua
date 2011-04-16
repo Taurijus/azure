@@ -128,6 +128,8 @@ function gamemap.draw()
 	]]
 	for i = 1, #gamemap.void do
 		love.graphics.print(tostring(gamemap.void[i].x1), 0, i * 10)
+		love.graphics.line              (gamemap.void[i].x1, gamemap.void[i].y1, gamemap.void[i].x2, gamemap.void[i].y2)
+		love.graphics.rectangle ("line", gamemap.void[i].x1, gamemap.void[i].y1, gamemap.void[i].x2 - gamemap.void[i].x1, gamemap.void[i].y2 - gamemap.void[i].y1)
 	end
 	love.graphics.print("^ row of x1 of void coords upper left corner", 0, 220)
 	-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
