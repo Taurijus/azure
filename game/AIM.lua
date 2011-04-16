@@ -218,20 +218,18 @@ end
 -- Vėliau reikėtų pridėti daugiau objektų, pvz. drakoną.
 -- Kam šaudyt į drakoną? :D
 function AIM.isNotVisible(x1, y1, x2, y2)		
-	for i = 1, #gamemap.wall do 				-- per visas sienas
-		for j = 1, #gamemap.wall[i] do  		-- per visus sienos stačiakampius		
-			local denom = (gamemap.wall[i][j].y2 - gamemap.wall[i][j].y1) * (x2 - x1) - (gamemap.wall[i][j].x2 - gamemap.wall[i][j].x1) * (y2 - y1)
-			if denom ~= 0 then
-				local ua = ((gamemap.wall[i][j].x2 - gamemap.wall[i][j].x1) * (y1 - gamemap.wall[i][j].y1) - (gamemap.wall[i][j].y2 - gamemap.wall[i][j].y1) * (x1 - gamemap.wall[i][j].x1)) / denom
-				if ua > 0 and ua < 1 then				
-					local ub = ((x2 - x1) * (y1 - gamemap.wall[i][j].y1) - (y2 - y1) * (x1 - gamemap.wall[i][j].x1)) / denom
-					if ub > 0 and ub < 1
-						then
-							return true	
-					end
+	for i = 1, #mapping.wall do 				-- per visas sienas
+		local denom = (mapping.wall[i].y2 - mapping.wall[i].y1) * (x2 - x1) - (mapping.wall[i].x2 - mapping.wall[i].x1) * (y2 - y1)
+		if denom ~= 0 then
+			local ua = ((mapping.wall[i].x2 - mapping.wall[i].x1) * (y1 - mapping.wall[i].y1) - (mapping.wall[i].y2 - mapping.wall[i].y1) * (x1 - mapping.wall[i].x1)) / denom
+			if ua > 0 and ua < 1 then				
+				local ub = ((x2 - x1) * (y1 - mapping.wall[i].y1) - (y2 - y1) * (x1 - mapping.wall[i].x1)) / denom
+				if ub > 0 and ub < 1
+					then
+						return true	
 				end
-			end	
-		end
+			end
+		end	
 	end
 	return false
 end
@@ -247,9 +245,9 @@ function AIM.update_inventory(i)
 
 	if BOT[i].x == W[5][1] and BOT[i].y == W[5][2]
 		then
-			if self.gold >= Inventory.weapon[1].price then
-				self.weapon = "weapon 1"
-				self.gold = self.gold - Inventory.weapon[1].price
+			if BOT[i].gold >= Inventory.weapon[1].price then
+				BOT[i].weapon = "weapon 1"
+				BOT[i].gold = BOT[i].gold - Inventory.weapon[1].price
 			end
 	end
 	
