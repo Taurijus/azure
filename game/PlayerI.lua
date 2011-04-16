@@ -15,6 +15,7 @@ function PlayerI.load()
 	PlayerI.rot = 0
 	PlayerI.offx = 32
 	PlayerI.offy = 32
+	PlayerI.TriggerLock = 0
 	Inventory.load()
 	Bullet.load()
 end
@@ -45,10 +46,14 @@ function PlayerI.update(dt)
 	if PlayerI.rot == nil then
 		PlayerI.rot = 0
 	end
-	if love.mouse.isDown("l") then
+	if love.mouse.isDown("l") and PlayerI.TriggerLock == 0 then
 		if Inventory.shoot() then
 			Bullet.AddShot(PlayerI.x, PlayerI.y,PlayerI.rot, 300)
+			PlayerI.TriggerLock = 1
 		end
+	end
+	if not love.mouse.isDown("l") then
+		PlayerI.TriggerLock = 0
 	end
 	Bullet.update(dt)
 end
