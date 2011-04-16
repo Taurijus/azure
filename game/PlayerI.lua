@@ -61,11 +61,11 @@ function PlayerI.draw()
 	Shop.draw()
 	Bullet.draw()
 
-	love.graphics.translate(PlayerI.x, PlayerI.y)
+	--[[love.graphics.translate(PlayerI.x, PlayerI.y)
 	love.graphics.rotate(PlayerI.rot)
-	love.graphics.translate(-PlayerI.x, -PlayerI.y)
+	love.graphics.translate(-PlayerI.x, -PlayerI.y)]]
 
-	love.graphics.draw(PlayerI.image, PlayerI.x-32, PlayerI.y-32, PlayerI.rot)	
+	love.graphics.draw(PlayerI.image, PlayerI.x, PlayerI.y, PlayerI.rot, 1, 1, 32, 32)
 
 	--[[
 	love.graphics.translate(PlayerI.x, PlayerI.y)
