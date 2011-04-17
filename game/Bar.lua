@@ -34,6 +34,7 @@ function healthBar.load(x, y, w, h)
 end
 
 function healthBar.update() -- Player.health
+	--healthBar.lvl = PlayerI.Health/100 * healthBar.max_lvl;
 	healthBar.lvl = healthBar.max_lvl;
 end
 

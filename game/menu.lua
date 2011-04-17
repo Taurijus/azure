@@ -4,9 +4,10 @@ pauseDelta = 0
 
 function mainMenu.load()
 	love.mouse.setVisible(true)
-	mainMenu.image0 = love.graphics.newImage(pre.. "dragon.png")
-	mainMenu.imagePlay = love.graphics.newImage(pre.. "dragon_play.png")
-	mainMenu.imageQuit = love.graphics.newImage(pre.. "dragon_quit.png")
+	mainMenu.image0 = love.graphics.newImage(pre.."dragon.png")
+	mainMenu.imageLoading = love.graphics.newImage(pre.."Loading.png")
+	mainMenu.imagePlay = love.graphics.newImage(pre.."dragon_play.png")
+	mainMenu.imageQuit = love.graphics.newImage(pre.."dragon_quit.png")
 	mainMenu.currentImage = mainMenu.image0
 end
 
@@ -14,7 +15,7 @@ function mainMenu.update()
 	if mouseInArea(292, 685, 534, 768) then
 		mainMenu.currentImage = mainMenu.imagePlay
 		if love.mouse.isDown("l") then 
-			state = 1
+			state = 1			
 		end
 	elseif mouseInArea(534, 685, 784, 768) then
 		mainMenu.currentImage = mainMenu.imageQuit
@@ -52,7 +53,7 @@ function pauseMenu.update(dt)
 		if (mouseInArea(356, 327, 526, 370) and love.mouse.isDown("l")) or love.keyboard.isDown("escape") then 
 			state = 1;
 			pauseDelta = 0
-		elseif mouseInArea(356, 407, 526, 453) and love.mouse.isDown("l") then 
+		elseif mouseInArea(356, 407, 526, 453) and love.mouse.isDown("l") then
 			love.quit()
 		end
 	end
