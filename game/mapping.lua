@@ -4,15 +4,44 @@ mapping = {}
 
 function mapping.load()
 	-- voidness coords (where player or dragon should not past)
-	mapping.image = love.graphics.newImage(pre.."9.png")
+	mapping.image = love.graphics.newImage("images/13.png")
+	mapping.tree = love.graphics.newImage("images/14.png")
+	mapping.tunnel1 = love.graphics.newImage("images/15.png")
+	mapping.tunnel2 = love.graphics.newImage("images/16.png")
+	mapping.Lobis = love.graphics.newImage("images/12.png")
 	--mapping.image4 = love.graphics.newImage("images/11.png")
-	mapping.x = 0
-	mapping.y = 0	
+	mapping['wallImages'] = {}
+	mapping.wallImages[1] = love.graphics.newImage("images/Siena1.png")
+	mapping.wallImages[2] = love.graphics.newImage("images/Siena2.png")
+	mapping.wallImages[3] = love.graphics.newImage("images/Siena3.png")
+	mapping.wallImages[4] = love.graphics.newImage("images/Siena4.png")
+	mapping.wallImages[5] = love.graphics.newImage("images/Siena5.png")
+	mapping.wallImages[6] = love.graphics.newImage("images/Siena6.png")
+	mapping.wallImages[7] = love.graphics.newImage("images/Siena7.png")
+	mapping.wallImages[8] = love.graphics.newImage("images/Siena8.png")
+	mapping.wallImages[9] = love.graphics.newImage("images/Siena9.png")
+	mapping.wallImages[10] = love.graphics.newImage("images/Siena10.png")
+	mapping.wallImages[11] = love.graphics.newImage("images/Siena11.png")
+	mapping.wallImages[12] = love.graphics.newImage("images/Siena12.png")
+	mapping.wallImages[13] = love.graphics.newImage("images/Siena13.png")
+	mapping.wallImages[14] = love.graphics.newImage("images/Siena14.png")
+	mapping.wallImages[15] = love.graphics.newImage("images/Siena15.png")
+	mapping.wallImages[16] = love.graphics.newImage("images/Siena16.png")
+	mapping.wallImages[17] = love.graphics.newImage("images/Siena17.png")
+	
+	mapping.treeShow = true
+
+	mapping.x = -580
+	mapping.y = -780	
 	mapping.xx = 0
 	mapping.yy = 0
 	mapping.file = love.filesystem.newFile("data.txt")
 	mapping.file:open('w')
-
+mapping['innerSanctum'] = {}
+mapping.innerSanctum[1] = {x = 954, y =1228}
+mapping.innerSanctum[2] = {x = 1601, y =701}
+mapping.innerSanctum[3] = {x = 1004, y =310}
+mapping.innerSanctum[4] = {x = 362, y =686}
 	mapping['wall'] = {}
 mapping.wall[1] = {x1 = 839, y1 =406, x2 = 363, y2 = 686}
 mapping.wall[2] = {x1 = 363, y1 =686, x2 = 715, y2 = 1010}
@@ -53,8 +82,8 @@ mapping.wall[34] = {x1 = 389, y1 =967, x2 = 501, y2 = 896}
 mapping.wall[35] = {x1 = 501, y1 =896, x2 = 623, y2 = 1012}
 mapping.wall[36] = {x1 = 623, y1 =1012, x2 = 571, y2 = 1052}
 mapping.wall[37] = {x1 = 571, y1 =1052, x2 = 611, y2 = 1093}
-mapping.wall[38] = {x1 = 611, y1 =1093, x2 = 711, y2 = 1023}
-mapping.wall[39] = {x1 = 758, y1 =1066, x2 = 595, y2 = 1179}
+mapping.wall[38] = {x1 = 611, y1 =1093, x2 = 716, y2 = 1011}
+mapping.wall[39] = {x1 = 766, y1 =1054, x2 = 595, y2 = 1179}
 mapping.wall[40] = {x1 = 595, y1 =1179, x2 = 468, y2 = 1050}
 mapping.wall[41] = {x1 = 468, y1 =1050, x2 = 522, y2 = 1012}
 mapping.wall[42] = {x1 = 522, y1 =1012, x2 = 487, y2 = 977}
@@ -71,7 +100,7 @@ mapping.wall[52] = {x1 = 1540, y1 =557, x2 = 2009, y2 = 851}
 mapping.wall[53] = {x1 = 2009, y1 =851, x2 = 1690, y2 = 1162}
 mapping.wall[54] = {x1 = 1690, y1 =1162, x2 = 1575, y2 = 1080}
 mapping.wall[55] = {x1 = 1575, y1 =1080, x2 = 1436, y2 = 1201}
-mapping.wall[56] = {x1 = 1436, y1 =1201, x2 = 1223, y2 = 1029}
+mapping.wall[56] = {x1 = 1436, y1 =1201, x2 = 1217, y2 = 1019}
 mapping.wall[57] = {x1 = 1270, y1 =990, x2 = 1427, y2 = 1112}
 mapping.wall[58] = {x1 = 1427, y1 =1112, x2 = 1516, y2 = 1032}
 mapping.wall[59] = {x1 = 1516, y1 =1032, x2 = 1362, y2 = 915}
@@ -94,6 +123,10 @@ mapping.wall[74] = {x1 = 967, y1 =502, x2 = 891, y2 = 449}
 	
 end
 
+function mapping.xyx(x1,y1,x2,y2,x)
+	return ((y2-y1)/(x2-x1))*x+y1-((y2-y1)/(x2-x1))*x1
+
+end
 
 
 function mapping.wallTouch()
@@ -107,27 +140,38 @@ for i = 1, #mapping.wall do
 			local vx3 = mapping.wall[i].x2 - mapping.wall[i].x1
 			local vy3 = mapping.wall[i].y2 - mapping.wall[i].y1
 
-			if math.abs(math.sqrt(vx3*vx3+vy3*vy3)-math.sqrt(vx2*vx2+vy2*vy2)-math.sqrt(vx1*vx1+vy1*vy1)) < 3 then
+			if math.abs(math.sqrt(vx3*vx3+vy3*vy3)-math.sqrt(vx2*vx2+vy2*vy2)-math.sqrt(vx1*vx1+vy1*vy1)) < 2.5 then
 				return true
 			end
 			
 		end
 	return false
 end
-
+function mapping.treeS()
+	if mapping.treeShow then
+		mapping.treeShow = false
+	else 
+		mapping.treeShow = true
+	end
+end
 function mapping.update(dt)
-
---[[	if love.mouse.isDown("l") then
+	if love.mouse.isDown("l") then
 		local x, y = love.mouse.getPosition()
 		mapping.xx = x
 		mapping.yy = y
 		--mapping.file.write( tostring(mapping.xx+mapping.x .. ' '..  mapping.yy+mapping.y)) 
-	end]]
+	end
 	
 end
+
 function mapping.draw()
 
-	love.graphics.draw(mapping.image, mapping.x, mapping.y)
+	love.graphics.draw(mapping.image, mapping.x-512, mapping.y-256)
+	for i = 1, #mapping.wallImages do
+	love.graphics.draw(mapping.wallImages[i], mapping.x, mapping.y)
+        end
+	love.graphics.draw(mapping.Lobis, mapping.x, mapping.y)
+	
 		--love.graphics.setColor( 255, 255, 0, 100 ) --Debug version (cool color)
 		for i = 1, #mapping.wall do
                         --love.graphics.print(tostring(mapping.wall[i][j].x1), j * 50, i * 10)
@@ -143,6 +187,47 @@ function mapping.draw()
 	love.graphics.print(mapping.xx-mapping.x .. ' ' .. mapping.yy-mapping.y, mapping.xx,mapping.yy)
 	love.graphics.print(-mapping.x+width/2 .. ' ' ..-mapping.y+height/2,10,20)
 	]]
+	
+	if mapping.xyx(mapping.innerSanctum[1].x
+		,mapping.innerSanctum[1].y,
+		mapping.innerSanctum[2].x
+		,mapping.innerSanctum[2].y,(width/2)-mapping.x) < (height/2)-mapping.y or mapping.xyx(mapping.innerSanctum[2].x
+		,mapping.innerSanctum[2].y,
+		mapping.innerSanctum[3].x
+		,mapping.innerSanctum[3].y,(width/2)-mapping.x) > (height/2)-mapping.y then 
+	love.graphics.draw(mapping.tunnel1, mapping.x-512, mapping.y-256)
+	else
+	if mapping.xyx(mapping.innerSanctum[3].x
+		,mapping.innerSanctum[3].y,
+		mapping.innerSanctum[4].x
+		,mapping.innerSanctum[4].y,(width/2)-mapping.x) > (height/2)-mapping.y or mapping.xyx(mapping.innerSanctum[4].x
+		,mapping.innerSanctum[4].y,
+		mapping.innerSanctum[1].x
+		,mapping.innerSanctum[1].y,(width/2)-mapping.x) < (height/2)-mapping.y then
+	love.graphics.draw(mapping.tunnel2, mapping.x-512, mapping.y-256)
+	else
+	love.graphics.draw(mapping.tree, mapping.x-512, mapping.y-256)
+	end
+	end
+love.graphics.print(mapping.xyx(mapping.innerSanctum[1].x
+		,mapping.innerSanctum[1].y,
+		mapping.innerSanctum[2].x
+		,mapping.innerSanctum[2].y,(width/2-mapping.x)), 10, 40)
+love.graphics.print(mapping.xyx(mapping.innerSanctum[2].x
+		,mapping.innerSanctum[2].y,
+		mapping.innerSanctum[3].x
+		,mapping.innerSanctum[3].y,(width/2)-mapping.x), 10, 60)
+love.graphics.print(mapping.xyx(mapping.innerSanctum[3].x
+		,mapping.innerSanctum[3].y,
+		mapping.innerSanctum[4].x
+		,mapping.innerSanctum[4].y,(width/2)-mapping.x), 10, 80)
+love.graphics.print(mapping.xyx(mapping.innerSanctum[4].x
+		,mapping.innerSanctum[4].y,
+		mapping.innerSanctum[1].x
+		,mapping.innerSanctum[1].y,(width/2)-mapping.x), 10, 100)
+love.graphics.print((height/2)-mapping.y, 160, 40)
+	love.graphics.print(mapping.xx-mapping.x .. ' ' .. mapping.yy-mapping.y, mapping.xx,mapping.yy)
+	love.graphics.print(-mapping.x+width/2 .. ' ' ..-mapping.y+height/2,10,20)
 	
 
 end
