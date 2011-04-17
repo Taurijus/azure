@@ -18,9 +18,9 @@ function Inventory.load()
 						buyspeed = 1,
 						ammo = 100,
 						maxammo = 1000,
-						bulletspeed = 2,
+						bulletspeed = 1,
 						img = love.graphics.newImage(pre.."1.png"),
-						price = 0,
+						price = 100,
 						cooldown = 0.1
 					}
 	
@@ -30,8 +30,28 @@ function Inventory.load()
 						maxammo = 1000,
 						bulletspeed = 2,
 						img = love.graphics.newImage(pre.."2.png"),
-						price = 0,
+						price = 100,
+						cooldown = 0.3
+					}
+					
+	Inventory.weapon[3] = {									-- 3 ir 4 yra copy paste, reikėjo botui dar dviejų ginklų, imu juos iš čia
+						buyspeed = 1,
+						ammo = 100,
+						maxammo = 1000,
+						bulletspeed = 3,
+						img = love.graphics.newImage(pre.."1.png"),
+						price = 100,
 						cooldown = 0.5
+					}
+	
+	Inventory.weapon[4] = {
+						buyspeed = 1,
+						ammo = 200,
+						maxammo = 1000,
+						bulletspeed = 4,
+						img = love.graphics.newImage(pre.."2.png"),
+						price = 100,
+						cooldown = 1
 					}
 	Inventory.LastShot = 0
 	--TO DO fill the  weapons table

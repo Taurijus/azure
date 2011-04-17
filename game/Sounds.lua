@@ -12,8 +12,12 @@ function sounds.load ()
 		if sounds.fade.soundIn ~= nil then love.audio.play (sounds.fade.soundIn) end
 	end
 	viduramziai1 = love.audio.newSource ("sounds/viduramziai_1.ogg")
-	narrowEscape = love.audio.newSource ("sounds/viduramziai_2_1.ogg")
-	sounds.fade.fromNow (narrowEscape, viduramziai1, 100)
+	pradzia = love.audio.newSource ("sounds/viduramziai_2_1.ogg")
+	ciklas = love.audio.newSource ("sounds/viduramziai_2_2.ogg")
+	ciklas:setLooping (true)
+	sounds.current = pradzia
+	sounds.next = ciklas
+	love.audio.play (sounds.current)
 end
 
 function sounds.update (dt)
@@ -28,4 +32,12 @@ function sounds.update (dt)
 			if sounds.fade.soundIn ~= nil then sounds.fade.soundIn:setVolume (phase) end
 		end
 	end
+	if sounds.current ~= nil and sounds.next ~= nil then
+		if sounds.current:isStopped () then
+			love.audio.play (sounds.next)
+			sounds.current = sounds.next
+			sounds.next = nil
+		end
+	end
+	
 end

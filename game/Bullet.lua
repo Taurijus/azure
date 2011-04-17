@@ -1,4 +1,3 @@
-Wall = {x1 = 100, y1 = 300, x2 = 300, y2 = 300}
 Bullet = {}
 function Bullet.load ()
 	Bullet.image = love.graphics.newImage ("images/tracer.png")
@@ -31,8 +30,8 @@ function Bullet.update(dt)
 				bullet.y > height or bullet.y < 0 then
 				table.remove(bullet)
 			end]]
-			for j = 1, #gamemap.void do
-				if Bullet.rectCross (bullet, gamemap.void[j]) then
+			for j = 1, #mapping.wall do
+				if Bullet.lineCross (bullet, mapping.wall[j]) then
 					Bullet.List[i] = Bullet.List[Bullet.Count]
 					Bullet.List[Bullet.Count] = nil
 					Bullet.Count = Bullet.Count - 1
@@ -61,7 +60,7 @@ function Bullet.rectCross (bullet, obj)
 end
 
 function Bullet.draw()
-	for i , bullet in ipairs(Bullet.List) do
+	for i, bullet in ipairs(Bullet.List) do
 		love.graphics.draw(Bullet.image, bullet.x, bullet.y, bullet.r, 1, 1, 16, 16)
 	end
 end
