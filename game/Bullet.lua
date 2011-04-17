@@ -31,7 +31,7 @@ function Bullet.update(dt)
 				table.remove(bullet)
 			end]]
 			for j = 1, #mapping.wall do
-				if Bullet.rectCross (bullet, mapping.wall[j]) then
+				if Bullet.lineCross (bullet, mapping.wall[j]) then
 					Bullet.List[i] = Bullet.List[Bullet.Count]
 					Bullet.List[Bullet.Count] = nil
 					Bullet.Count = Bullet.Count - 1

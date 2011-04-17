@@ -131,10 +131,10 @@ function mapping.draw()
 		--love.graphics.setColor( 255, 255, 0, 100 ) --Debug version (cool color)
 		for i = 1, #mapping.wall do
                         --love.graphics.print(tostring(mapping.wall[i][j].x1), j * 50, i * 10)
-			local xx1 = mapping.wall[i].x1+mapping.x
-			local yy1 = mapping.wall[i].y1+mapping.y
-			local xx2 = mapping.wall[i].x2+mapping.x
-			local yy2 = mapping.wall[i].y2+mapping.y
+			local xx1 = mapping.wall[i].x1
+			local yy1 = mapping.wall[i].y1
+			local xx2 = mapping.wall[i].x2
+			local yy2 = mapping.wall[i].y2
 			love.graphics.line(xx1,yy1,xx2,yy2)
 		end
 		--[[
@@ -145,5 +145,24 @@ function mapping.draw()
 	]]
 	
 
+end
+--[[
+sakys true, jei yra nors viena besikertanti siena
+]]
+function mapping.intersect (x1, y1, x2, y2)		
+	for i = 1, #mapping.wall do 				-- per visas sienas
+		local denom = (mapping.wall[i].y2 - mapping.wall[i].y1) * (x2 - x1) - (mapping.wall[i].x2 - mapping.wall[i].x1) * (y2 - y1)
+		if denom ~= 0 then
+			local ua = ((mapping.wall[i].x2 - mapping.wall[i].x1) * (y1 - mapping.wall[i].y1) - (mapping.wall[i].y2 - mapping.wall[i].y1) * (x1 - mapping.wall[i].x1)) / denom
+			if ua > 0 and ua < 1 then				
+				local ub = ((x2 - x1) * (y1 - mapping.wall[i].y1) - (y2 - y1) * (x1 - mapping.wall[i].x1)) / denom
+				if ub > 0 and ub < 1
+					then
+						return true	
+				end
+			end
+		end	
+	end
+	return false
 end
 
