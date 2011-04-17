@@ -2,20 +2,20 @@
 pre, src = 'images/', 'game/'
 
 state = 0; -- 0-main menu, 1-play, 2-pause
-dofile(src..'dragon.lua')
-dofile(src..'PlayerI.lua')
-dofile(src..'bullet.lua')
---dofile(src..'AI.lua')
-dofile(src..'AIM.lua')
-
-dofile(src..'Bar.lua')
-dofile(src..'Mapping.lua')
-dofile (src..'Sounds.lua')
-dofile(src..'Networking.lua')
 dofile(src..'menu.lua')
-dofile(src..'frame.lua')
 
 function loadGame()
+	dofile(src..'dragon.lua')
+	dofile(src..'PlayerI.lua')
+	dofile(src..'bullet.lua')
+	--dofile(src..'AI.lua')
+	dofile(src..'AIM.lua')
+
+	dofile(src..'Bar.lua')
+	dofile(src..'Mapping.lua')
+	dofile (src..'Sounds.lua')
+	dofile(src..'Networking.lua')
+	dofile(src..'frame.lua')
 	pauseMenu.load()
 	--Physics
 	world = love.physics.newWorld(-1*scrWidth,-1*scrHeight, scrWidth, scrHeight)
@@ -31,7 +31,7 @@ function loadGame()
 	healthBar.load(0, 430, 40, 280)
 	frame.load()
 	sounds.load()
-	Networking.load()
+	Networking.load ()
 	AIM.load()
 end
 
@@ -109,12 +109,10 @@ function love.draw()
 		Bullet.draw()
 		PlayerI.draw()
 		love.graphics.pop()
-		Inventory.draw()
 		sleepBar.draw()
-		healthBar.draw()
-		frame.draw()
-	elseif state == 1 and not isGameLoaded then
-		love.graphics.draw(mainMenu.imageLoading, 0, 0)
+		--healthBar.draw()
+		Inventory.draw()
+		love.graphics.print(PlayerI.x .. " : " .. PlayerI.y, 300, 500)
 	elseif state == 2 then
 		pauseMenu.draw()
 	end
