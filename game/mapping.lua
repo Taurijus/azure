@@ -35,14 +35,6 @@ function mapping.load()
 	mapping.file = love.filesystem.newFile("data.txt")
 	mapping.file:open('w')
 
-	--[[
-	mapping['innerSanctum'] = {}
-	mapping.innerSanctum[1] = {x = 954, y =1228}
-	mapping.innerSanctum[2] = {x = 1601, y =701}
-	mapping.innerSanctum[3] = {x = 1004, y =310}
-	mapping.innerSanctum[4] = {x = 362, y =686}
-	]]
-
 
 	--[[mapping['wall'] = {}
 	mapping.wall[1] = {x1 = 839, y1 =406, x2 = 363, y2 = 686}
@@ -323,7 +315,6 @@ function mapping.draw()
 	for i = 1, #mapping.wallImages do
 		love.graphics.draw(mapping.wallImages[i], mapping.x, mapping.y)
 	end
-	--[[
 	for i = 1, #mapping.wall do
                        --love.graphics.print(tostring(mapping.wall[i][j].x1), j * 50, i * 10)
 		local xx1 = mapping.wall[i].x1
@@ -331,7 +322,7 @@ function mapping.draw()
 		local xx2 = mapping.wall[i].x2
 		local yy2 = mapping.wall[i].y2
 		love.graphics.line(xx1,yy1,xx2,yy2)
-	end]]
+	end
 	
 
 end

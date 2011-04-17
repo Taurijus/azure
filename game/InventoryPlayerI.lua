@@ -21,7 +21,8 @@ function Inventory.load()
 						bulletspeed = 1,
 						img = love.graphics.newImage(pre.."1.png"),
 						price = 100,
-						cooldown = 0.1
+						cooldown = 0.1,
+						have = true
 					}
 	
 	Inventory.weapon[2] = {
@@ -31,7 +32,8 @@ function Inventory.load()
 						bulletspeed = 2,
 						img = love.graphics.newImage(pre.."2.png"),
 						price = 100,
-						cooldown = 0.3
+						cooldown = 0.3,
+						have = false
 					}
 					
 	Inventory.weapon[3] = {									-- 3 ir 4 yra copy paste, reikėjo botui dar dviejų ginklų, imu juos iš čia
@@ -41,7 +43,8 @@ function Inventory.load()
 						bulletspeed = 3,
 						img = love.graphics.newImage(pre.."1.png"),
 						price = 100,
-						cooldown = 0.5
+						cooldown = 0.5,
+						have = false
 					}
 	
 	Inventory.weapon[4] = {
@@ -51,7 +54,8 @@ function Inventory.load()
 						bulletspeed = 4,
 						img = love.graphics.newImage(pre.."2.png"),
 						price = 100,
-						cooldown = 1
+						cooldown = 1,
+						have = false
 					}
 	Inventory.LastShot = 0
 	--TO DO fill the  weapons table
@@ -78,6 +82,7 @@ function Inventory.BuyWeapon(nr, dt)
 	if Inventory.weapon[nr].ammo + tobuy > Inventory.weapon[nr].maxammo then
 		tobuy = Inventory.weapon[nr].maxammo - Inventory.weapon[nr].ammo 
 	end
+	Inventory.weapon[nr].have = true
 	Inventory.weapon[nr].ammo = Inventory.weapon[nr].ammo + tobuy
 end
 

@@ -1,12 +1,17 @@
 Shop = {}
 
 function Shop.load()
-	Shop.image = love.graphics.newImage(pre.."Shop.png")
+    Shop.image = {}
+    for i=1,4 do
+		Shop.image[i] = love.graphics.newImage(pre.."Shop"..i..".png")
+	end
 	Shop.w = 64
 	Shop.h = 64
 	Shop.List = {}
-    --Shop.AddShop(300,150, 1)
-   -- Shop.AddShop(150,300, 2)
+    Shop.AddShop(450, 700, 1)
+    Shop.AddShop(740, 700, 2)
+    Shop.AddShop(1010, 440, 3)
+    Shop.AddShop(1360, 860, 4)
 end
 
 function Shop.AddShop(xx, yy, weaponid)
@@ -16,7 +21,7 @@ function Shop.AddShop(xx, yy, weaponid)
     phyStmp.s:setData("Shop"..weaponid)
 	phyStmp.s:setSensor(true)
 	table.insert(Shop.List, {
-		image = Shop.image,
+		image = Shop.image[weaponid],
 		x = xx,
 		y = yy,
 		vx = 60,
