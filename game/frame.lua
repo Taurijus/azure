@@ -15,6 +15,6 @@ end
 --end
 
 function frame.draw()
-	love.graphics.draw(frame.image)
+	love.graphics.draw(frame.image, 0, 0)
 	
 end
