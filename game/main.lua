@@ -2,15 +2,16 @@
 pre, src = 'images/', 'game/'
 
 state = 0; -- 0-main menu, 1-play, 2-pause
-
 dofile(src..'dragon.lua')
 dofile(src..'PlayerI.lua')
 dofile(src..'bullet.lua')
-dofile(src..'AI.lua')
+--dofile(src..'AI.lua')
+dofile(src..'AIM.lua')
 
 dofile(src..'Bar.lua')
-dofile(src..'Map.lua')
-dofile(src..'Sounds.lua')
+dofile(src..'Mapping.lua')
+dofile (src..'Sounds.lua')
+dofile(src..'Networking.lua')
 dofile(src..'menu.lua')
 
 function loadGame()
@@ -22,20 +23,21 @@ function loadGame()
 	world:setAllowSleep(false)
     dragon.load()
     PlayerI.load()
-    AI.load()
+	Clients.load ()
 	Bullet.load ()
-	gamemap.load()
-	sleepBar.load(0, 75, 36, 266)
-	healthBar.load(0, 427, 36, 266)
+	mapping.load()
+	sleepBar.load(0, 100, 36, 266)
+	healthBar.load(0, 350, 36, 266)
+	sounds.load ()
+	Networking.load ()
+	AIM.load()
 end
 
 function love.load()
-	sounds.load()
 	scrWidth = 1024
 	scrHeight = 768
 	isFullsreen = false
 	vsync = false
-	isGameLoaded = false
 	love.graphics.setMode(scrWidth, scrHeight, isFullscreen, vsync, 0 )
 	mainMenu.load()
 end
@@ -74,11 +76,17 @@ function love.update(dt)
 		dlt = dt
 		dragon.update(dt)
 		PlayerI.update(dt)
-		AI.update(dt)
+		AIM.update(dt)
 		Bullet.update (dt)
-		sleepBar.update(dt, 1)
+		sleepBar.update(dt, 0.5)
 		healthBar.update()
 		sounds.update (dt)
+		Networking.update (dt)
+		--[[
+		if love.keyboard.isDown("escape") then
+			love.quit()
+		end
+		]]
 		world:update(dt)
 	elseif state == 2 then
 		pauseMenu.update(dt)
@@ -89,12 +97,19 @@ function love.draw()
 	if state == 0 then 
 		mainMenu.draw();
 	elseif state == 1 and isGameLoaded then
-		gamemap.draw()
+		love.graphics.push()
+		love.graphics.translate(scrWidth/2 - PlayerI.x, scrHeight/2 - PlayerI.y)
+		mapping.draw()
 		dragon.draw()
+		Clients.draw ()
+		AIM.draw()
+		Shop.draw()
+		Bullet.draw()
 		PlayerI.draw()
-		AI.draw()
-		sleepBar.draw()
-		healthBar.draw()
+		love.graphics.pop()
+		--sleepBar.draw()
+		Inventory.draw()
+		--healthBar.draw()
 	elseif state == 2 then
 		pauseMenu.draw()
 	end
