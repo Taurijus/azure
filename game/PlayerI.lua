@@ -34,27 +34,35 @@ function PlayerI.update(dt)
 	local x, y = love.mouse.getPosition()
 	if love.keyboard.isDown("left") or love.keyboard.isDown("d") then
 		mapping.x = mapping.x + 100 * dt
+		PlayerI.x = PlayerI.x - 100 * dt
 		if mapping.wallTouch() then
 			mapping.x = mapping.x - 100 * dt
+			PlayerI.x = PlayerI.x + 100 * dt
 		end
     	end
     	if love.keyboard.isDown("right") or love.keyboard.isDown("g") then
 		mapping.x = mapping.x - 100 * dt
+		PlayerI.x = PlayerI.x + 100 * dt
 		if mapping.wallTouch() then
 			mapping.x = mapping.x + 100 * dt
+			PlayerI.x = PlayerI.x - 100 * dt
 		end
     end
     	if love.keyboard.isDown("up") or love.keyboard.isDown("r") then
 		mapping.y = mapping.y + 100 * dt
+		PlayerI.y = PlayerI.y - 100 * dt
 		if mapping.wallTouch() then
 			mapping.y = mapping.y - 100 * dt
+			PlayerI.y = PlayerI.y + 100 * dt
 		end
 
     	end
     	if love.keyboard.isDown("down") or love.keyboard.isDown("f") then
 		mapping.y = mapping.y - 100 * dt 
+		PlayerI.y = PlayerI.y + 100 * dt 
 		if mapping.wallTouch() then
 			mapping.y = mapping.y + 100 * dt
+			PlayerI.y = PlayerI.y - 100 * dt
 		end
 	end
 	--Physics coord move
@@ -87,7 +95,7 @@ function PlayerI.draw()
 	Shop.draw()
 	Bullet.draw()
 	--imapping.draw()
-	love.graphics.draw(PlayerI.image, PlayerI.x, PlayerI.y, PlayerI.rot, -1, 1, PlayerI.offx, PlayerI.offy)	
+	love.graphics.draw(PlayerI.image, love.graphics.getWidth() / 2, love.graphics.getHeight() / 2, PlayerI.rot, -1, 1, PlayerI.offx, PlayerI.offy)	
 	Inventory.draw()
 end
 
@@ -148,7 +156,7 @@ end
 function Clients.draw ()
 	for i , C in ipairs (Clients.IPTable) do
 		if C.drawable then
-			love.graphics.draw (Clients.image, C.x, C.y, C.r, 1, 1, C.oh, C.ov)
+			love.graphics.draw (Clients.image, C.x+mapping.x, C.y+mapping.y, C.r, 1, 1, C.oh, C.ov)
 		end
 	end
 end
