@@ -70,13 +70,19 @@ function love.update(dt)
 end
 
 function love.draw()
+	love.graphics.push()
+	love.graphics.translate(scrWidth/2 - PlayerI.x, scrHeight/2 - PlayerI.y)
 	mapping.draw()
 	dragon.draw()
-	PlayerI.draw()
 	Clients.draw ()
 	AIM.draw()
+	Shop.draw()
+	Bullet.draw()
+	PlayerI.draw()
+	love.graphics.pop()
 	--sleepBar.draw()
 	--healthBar.draw()
+	Inventory.draw()
 end
 
 function love.quit()
