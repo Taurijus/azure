@@ -11,8 +11,8 @@ function PlayerI.load()
 	PlayerI.image = love.graphics.newImage(pre.."11.png")
 	local width = love.graphics.getWidth()
     local height = love.graphics.getHeight()
-	PlayerI.x = 00
-	PlayerI.y = 0
+	PlayerI.x = 1000
+	PlayerI.y = 800
 	PlayerI.w = 64
 	PlayerI.h = 64
 	PlayerI.rot = 0
