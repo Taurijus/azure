@@ -1,0 +1,6 @@
+syntax: glob
+.*
+*.bat
+*.orig
+*.lua~
+*.rtf
