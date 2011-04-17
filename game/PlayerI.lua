@@ -62,9 +62,8 @@ function PlayerI.update(dt)
 			PlayerI.y = PlayerI.y + moveVectorY
 		end
 	end
-	
+
 	local x, y = love.mouse.getPosition()
-	
 	--Physics coord move
 	phyPl.b:setX(PlayerI.x)	
 	phyPl.b:setY(PlayerI.y)
