@@ -37,7 +37,7 @@ function Inventory.load()
 						ammo = 100,
 						maxammo = 1000,
 						bulletspeed = 3,
-						img = love.graphics.newImage(pre.."ginklai/g1.png"),
+						img = love.graphics.newImage(pre.."ginklai/g3.png"),
 						price = 100,
 						cooldown = 0.5,
 						have = false
@@ -48,7 +48,7 @@ function Inventory.load()
 						ammo = 200,
 						maxammo = 1000,
 						bulletspeed = 4,
-						img = love.graphics.newImage(pre.."ginklai/g2.png"),
+						img = love.graphics.newImage(pre.."ginklai/g4.png"),
 						price = 100,
 						cooldown = 1,
 						have = false

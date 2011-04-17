@@ -315,6 +315,7 @@ function mapping.draw()
 	for i = 1, #mapping.wallImages do
 		love.graphics.draw(mapping.wallImages[i], mapping.x, mapping.y)
 	end
+	--[[
 	for i = 1, #mapping.wall do
                        --love.graphics.print(tostring(mapping.wall[i][j].x1), j * 50, i * 10)
 		local xx1 = mapping.wall[i].x1
@@ -323,6 +324,7 @@ function mapping.draw()
 		local yy2 = mapping.wall[i].y2
 		love.graphics.line(xx1,yy1,xx2,yy2)
 	end
+	]]
 	
 
 end
