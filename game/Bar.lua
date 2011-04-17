@@ -8,7 +8,7 @@ function sleepBar.load(x, y, w, h)
 end
 
 function sleepBar.update()
-	sleepBar.lvl = Dragon.angriness/100 * sleepBar.max_lvl  
+	sleepBar.lvl = Dragon.angryness/100 * sleepBar.max_lvl  
 end
 
 function sleepBar.draw()
@@ -27,7 +27,7 @@ function healthBar.load(x, y, w, h)
 end
 
 function healthBar.update() -- Player.health
-	--healthBar.lvl = PlayerI.Health/100 * healthBar.max_lvl;
+	healthBar.lvl = PlayerI.Health/100 * healthBar.max_lvl;
 	healthBar.lvl = healthBar.max_lvl;
 end
 

@@ -6,10 +6,6 @@ local deltaBuy = 0
 
 
 function Inventory.load()
-	Inventory.image = love.graphics.newImage(pre.."inventory.png")
-	--Inventory.bfg = love.graphics.newImage(pre.."1.png")
-	--Inventory.Dinamitas = love.graphics.newImage(pre.."2.png")
-	--Inventory.Ragatke = love.graphics.newImage(pre.."3.png")
 	Inventory.x = 0
 	Inventory.y = 600-160
 	Inventory.actWeap = 1
@@ -19,7 +15,7 @@ function Inventory.load()
 						ammo = 100,
 						maxammo = 1000,
 						bulletspeed = 1,
-						img = love.graphics.newImage(pre.."1.png"),
+						img = love.graphics.newImage(pre.."ginklai/g1.png"),
 						price = 100,
 						cooldown = 0.1,
 						have = true
@@ -30,7 +26,7 @@ function Inventory.load()
 						ammo = 200,
 						maxammo = 1000,
 						bulletspeed = 2,
-						img = love.graphics.newImage(pre.."2.png"),
+						img = love.graphics.newImage(pre.."ginklai/g2.png"),
 						price = 100,
 						cooldown = 0.3,
 						have = false
@@ -41,7 +37,7 @@ function Inventory.load()
 						ammo = 100,
 						maxammo = 1000,
 						bulletspeed = 3,
-						img = love.graphics.newImage(pre.."1.png"),
+						img = love.graphics.newImage(pre.."ginklai/g1.png"),
 						price = 100,
 						cooldown = 0.5,
 						have = false
@@ -52,7 +48,7 @@ function Inventory.load()
 						ammo = 200,
 						maxammo = 1000,
 						bulletspeed = 4,
-						img = love.graphics.newImage(pre.."2.png"),
+						img = love.graphics.newImage(pre.."ginklai/g2.png"),
 						price = 100,
 						cooldown = 1,
 						have = false
@@ -98,9 +94,9 @@ end
 function Inventory.draw()
 	local offsetx = 30
 	local i = Inventory.actWeap
-	love.graphics.draw(Inventory.image, Inventory.x, Inventory.y)
-	love.graphics.draw(Inventory.weapon[i].img, Inventory.x+offsetx, Inventory.y+10)
-	love.graphics.print(Inventory.weapon[i].ammo, Inventory.x, Inventory.y+10)
+	--love.graphics.draw(Inventory.image, Inventory.x, Inventory.y)
+	--love.graphics.draw(Inventory.weapon[i].img, Inventory.x+offsetx, Inventory.y+10)
+	--love.graphics.print(Inventory.weapon[i].ammo, Inventory.x, Inventory.y+10)
 	--Helps config buying speed
 	--love.graphics.print(tobuy, Inventory.x+ 300, Inventory.y+10)
 end

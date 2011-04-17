@@ -64,7 +64,7 @@ W[36] = {1540, 580, 22, 25, 22, 22, 22, 22, 22, 22, 22, 22}
 W[37] = {665, 1230, 24, 24,2 ,2 ,24, 24, 24, 24, 2 , 2}
 
 -- drako waypoint'ai (koordX, koordY, angryWay1, angryWay2, angryWay3, home)
-D[1] = {990, 680, 2, 3, 3, 1}		-- drako centras
+D[1] = {990, 680, 2, 3, 3, 1}		-- drako centras							-- TODO pridėti trečią drako kelią ir normalų kelią home
 D[2] = {1300, 700, 2, 13, 14, 1}
 D[3] = {765, 695, 8, 9, 8, 1}
 D[4] = {865, 915, 11, 3, 1, 1}
@@ -83,30 +83,26 @@ D[15] = {955, 1140, 11, 14, 11, 1}
 
 -- drako funkcijos, iškėliau kad suprast eitų
 function AIM.create_dragon()
-	math.randomseed(os.time())
-	math.random()
 	Dragon = {
 			x = D[1][1],
 			y = D[1][2],
-			kitasD = D[1][math.floor(3 + math.random(0.5, 2.5))],			
+			kitasD = D[1][2 + is12()],			
 			state = "sleepy", --angry, attack
 			weapon = "fangs and superpowers",
 			gold = 999999,					-- pradžioje nėra aukso
 			rot = 0,
 			health = 999999,
 			zone = 70,						-- apytikris pavojaus spindulys (for now, jei arti prieina)
-			angriness = 0,					-- laikas, kai drakas piktas. kai būna piktas ilgą laiką, vėliau apsnūsta ir grįžta
+			angryness = 0,					-- laikas, kai drakas piktas. kai būna piktas ilgą laiką, vėliau apsnūsta ir grįžta
 			greitis = 10,
-			angriness_add = 10,
-			max_angriness = 100
+			angryness_add = 10,
+			max_angryness = 100
 		  }
 end
 
 function AIM.update_dragon(dt)
 	AIM.dragon_state(dt)
 	AIM.dragon_image()
-	math.randomseed(os.time())
-	math.random()
 	if Dragon.state == "angry" or Dragon.state == "home"		-- jei reikia judėti
 		then
 			-- judama link kitos koord.
@@ -127,7 +123,7 @@ function AIM.update_dragon(dt)
 			then 	-- renkamės kitą wp
 				if Dragon.state == "angry"
 					then
-						Dragon.kitasD = D[Dragon.kitasD][math.floor(3 + math.random(0.5, 2.5))]
+						Dragon.kitasD = D[Dragon.kitasD][2 + is12()]
 					else
 						Dragon.kitasD = D[Dragon.kitasD][6]	
 				end				
@@ -153,26 +149,26 @@ function AIM.dragon_state(dt)
 	if Dlinija < Dragon.zone * Dragon.zone
 		then
 			Dragon.state = "angry"
-			if Dragon.angriness <= Dragon.max_angriness then
-				Dragon.angriness = Dragon.angriness + Dragon.angriness_add
+			if Dragon.angryness <= Dragon.max_angryness then
+				Dragon.angryness = Dragon.angryness + Dragon.angryness_add
 			end
 	end
 	
-	if Dragon.angriness <= 0
+	if Dragon.angryness <= 0
 		then
 			if Dragon.x == D[1][1] and Dragon.y == D[1][2]		-- jei parsivilko namo
 				then
-					Dragon.angriness = 0
+					Dragon.angryness = 0
 					Dragon.state = "sleepy"
 				else
-					Dragon.angriness = 0
+					Dragon.angryness = 0
 					Dragon.state = "home"
 			end
 		else
-			Dragon.angriness = Dragon.angriness - dt*10
+			Dragon.angryness = Dragon.angryness - dt*10
 	end
 	
-	if Dlinija < Dragon.zone * Dragon.zone * 4 and Dragon.angriness == 0	-- jei yra 4-gubu atstumu už zonos, yra nervingas
+	if Dlinija < Dragon.zone * Dragon.zone * 4 and Dragon.angryness == 0	-- jei yra 4-gubu atstumu už zonos, yra nervingas
 		then
 			Dragon.state = "annoyed"
 		end
@@ -192,9 +188,6 @@ end
 -- n - botų skaičius
 function AIM.load()
 	BOT = {}
-	math.randomseed(os.time())
-	math.random()
-
 	AIM.n = 0 --pirmas botas
 	AIM.create_bot()
 	AIM.create_dragon()
@@ -205,7 +198,7 @@ function AIM.create_bot()
 	BOT[AIM.n] = {image = love.graphics.newImage(pre.."AI.gif"),
 			x = W[AIM.startW][1],
 			y = W[AIM.startW][2],
-			kitasW = W[AIM.startW][math.floor(3 + math.random(0.5, 1.5))],
+			kitasW = W[AIM.startW][2 + is12()],
 			
 				-- pradiniai parametrai
 			state = "gold",				-- pradinis state eina prie aukso
@@ -231,23 +224,26 @@ function AIM.update(dt)
 	for i = 1, AIM.n do
 		AIM.choose_state(i)	
 		-- tada pažiūrim ar atėjom į waypoint
-		math.randomseed(os.time())
-		math.random()
 		BOT[i].speed_modifier = math.random(0.8, 1.2)			-- keičiasi boto greitis!
 		if W[BOT[i].kitasW][1] == BOT[i].x and W[BOT[i].kitasW][2] == BOT[i].y
 			then 											-- renkamės kitą wp
 				if BOT[i].state == "gold"
 					then
-						BOT[i].kitasW = W[BOT[i].kitasW][math.floor(3 + math.random(0.5, 1.5))]
+						BOT[i].kitasW = W[BOT[i].kitasW][2 + is12()]
 					elseif BOT[i].state == "spawn"
 							then
-								BOT[i].kitasW = W[BOT[i].kitasW][math.floor(5 + math.random(0.5, 1.5))]
+								BOT[i].kitasW = W[BOT[i].kitasW][4 + is12()]
 							elseif BOT[i].state == "weapon"
 									then
-										BOT[i].kitasW = W[BOT[i].kitasW][math.floor(7 + math.random(0.5, 1.5))]
-									elseif BOT[i].state == "hunt"
+										BOT[i].kitasW = W[BOT[i].kitasW][6 + is12()]
+									elseif BOT[i].state == "hunt" or BOT[i].state == "hunt2"
 										then
-											BOT[i].kitasW = W[BOT[i].kitasW][math.floor(9 + math.random(0.5, 1.5))]
+											if BOT[i].state == "hunt"
+												then
+													BOT[i].kitasW = W[BOT[i].kitasW][8 + is12()]
+												else
+													BOT[i].kitasW = W[BOT[i].kitasW][10 + is12()]
+											end
 										end
 			else 	-- einam toliau link waypoint
 			
@@ -310,6 +306,10 @@ function AIM.choose_state(i)
 				end
 			else
 				BOT[i].state = "hunt"
+				if(i % 2) == 1
+					then
+						BOT[i].state = "hunt2"
+				end
 		end
 	end
 end
@@ -357,6 +357,7 @@ function AIM.isNotVisible(x1, y1, x2, y2)
 			end
 		end	
 	end
+	
 	return false
 end
 
@@ -432,13 +433,19 @@ function AIM.update_inventory(i)
 end
 
 function AIM.botu_info()
-	text1 = "Botu sk: "..AIM.n
-	love.graphics.print(text1, 750, 600)
+	text1 = "Botu sk: "..AIM.n.." Random sk: "..is12()
+	love.graphics.print(text1, 950, 600)
 	for i = 1, AIM.n do
 	text2 = "Bot "..i.." ginklas: "..BOT[i].weapon.." state: "..BOT[i].state.." gold: ".. BOT[i].gold.." wp: "..BOT[i].kitasW
-		love.graphics.print(text2, 800, 600 + i * 20)
+		love.graphics.print(text2, 1000, 600 + i * 20)
 	end
 	
-	text3 = "Drago busena: "..Dragon.state.." Kitas wp: "..Dragon.kitasD.." Atstumas: "..math.sqrt(Dlinija).." angriness: "..Dragon.angriness --vėliau sqrt nuimti
-	love.graphics.print(text3, 750, 580)	
+	text3 = "Drago busena: "..Dragon.state.." Kitas wp: "..Dragon.kitasD.." Atstumas: "..math.sqrt(Dlinija).." Angryness: "..Dragon.angryness --vėliau sqrt nuimti
+	love.graphics.print(text3, 950, 580)	
+end
+
+-- Funkcija grąžina vienetą arba dvejetą
+function is12()
+	math.randomseed(os.time())
+	return math.floor(math.random()*100000) % 2 +1
 end

@@ -20,6 +20,7 @@ function frame.load()
 					}
 	frame.ginklai = {x = 739, y = 45}
 	frame.spastai = {x = 871, y = 45}
+	frame.ginklai_t = {x = 778, y = 159}
 
 end
 
@@ -32,6 +33,7 @@ function frame.draw()
 	love.graphics.draw(frame.auksas.im[0], frame.auksas.x, frame.auksas.y)
 	love.graphics.draw(frame.akis[0])
 	love.graphics.draw(Inventory.weapon[Inventory.actWeap].img, frame.ginklai.x, frame.ginklai.y)
+	love.graphics.print(Inventory.weapon[Inventory.actWeap].ammo, frame.ginklai_t.x, frame.ginklai_t.y)
 end
 
 --function frame.akiesBusena()
