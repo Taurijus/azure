@@ -9,6 +9,7 @@ PlayerI = {}
 function PlayerI.load()
 	Shop.load()
 	PlayerI.image = love.graphics.newImage(pre.."11.png")
+	PlayerI.imgsheet = love.graphics.newImage(pre.."Player_spritesheet.png")
 	local width = love.graphics.getWidth()
     local height = love.graphics.getHeight()
 	PlayerI.x = 1000
@@ -16,8 +17,8 @@ function PlayerI.load()
 	PlayerI.w = 64
 	PlayerI.h = 64
 	PlayerI.rot = 0
-	PlayerI.offx = 32
-	PlayerI.offy = 58
+	PlayerI.offx = 300
+	PlayerI.offy = 0
 	PlayerI.TriggerLock = 0
 	PlayerI.Health = 100
 	--Player physics
@@ -26,6 +27,13 @@ function PlayerI.load()
     phyPl.s = love.physics.newRectangleShape(phyPl.b, -1*PlayerI.offx, -1*PlayerI.offy, PlayerI.w, PlayerI.h, 0)
     phyPl.s:setData("Player")
 	phyPl.s:setSensor(true)
+	PlayerI.anim =  newAnimation(PlayerI.imgsheet, 64, 64, 1, 0)
+	PlayerI.animd = 0
+	PlayerI.animspeed = 0.1
+	PlayerI.animframe = 1
+	PlayerI.animfront = 0 -- 0 for back, 1 for front
+	PlayerI.animscx = 1
+	PlayerI.animscy = 1
 	Inventory.load()
 	PlayerI.currentimage = PlayerI.image
 end
@@ -53,6 +61,7 @@ function PlayerI.update(dt)
 	end
 	
 	if anykey then
+		PlayerI.animd = PlayerI.animd + dt
 		local moveVectorInvLen = 1.0 / math.sqrt (moveVectorX * moveVectorX + moveVectorY * moveVectorY)
 		moveVectorX = moveVectorX * moveVectorInvLen * dt * 200
 		moveVectorY = moveVectorY * moveVectorInvLen * dt * 200
@@ -95,6 +104,26 @@ function PlayerI.update(dt)
 	dx = x-scrWidth/2
 	dy = y-scrHeight/2
 
+	if y <= love.graphics.getHeight()/2 then
+		PlayerI.animfront = 0
+		if x < love.graphics.getWidth()/2  then
+			PlayerI.animscx = -1
+			PlayerI.animscy = 1 -- virsus kaire
+		else
+			PlayerI.animscx = 1
+			PlayerI.animscy = 1 -- virsus desine
+		end
+	else
+		PlayerI.animfront = 1
+		if x < love.graphics.getWidth()/2  then
+			PlayerI.animscx = -1
+			PlayerI.animscy = 1 -- apacia kaire
+		else
+			PlayerI.animscx = 1
+			PlayerI.animscy = 1 -- virsus desine
+		end
+	end
+
 	PlayerI.rot = math.acos(dx/(math.sqrt(dx*dx+dy*dy)))*(dy/math.abs(dy))
 	if PlayerI.rot == nil then
 		PlayerI.rot = 0
@@ -116,7 +145,32 @@ function PlayerI.draw()
 	local width = love.graphics.getWidth()
 	local height = love.graphics.getHeight()
 	--imapping.draw()
-	love.graphics.draw(PlayerI.image, PlayerI.x, PlayerI.y, PlayerI.rot, -1, 1, PlayerI.offx, PlayerI.offy)	
+	PlayerI.chooseFrame()	
+	local frame = (Inventory.actWeap*2 + PlayerI.animfront)*5
+	
+	+PlayerI.animframe - 1
+	if frame == 0 then
+		frame = 1
+	end
+	PlayerI.anim:seek(frame)
+	if PlayerI.animscx == 1 then
+		PlayerI.anim:draw(PlayerI.x-32, PlayerI.y-32, 0, PlayerI.animscx, PlayerI.animscy, PlayerI.offx, PlayerI.offy)
+	else
+		PlayerI.anim:draw(PlayerI.x+32, PlayerI.y-32, 0, PlayerI.animscx, PlayerI.animscy, PlayerI.offx, PlayerI.offy)
+	end
+	--love.graphics.print(PlayerI.rot, 600, 600)
+end
+
+function PlayerI.chooseFrame()
+	if PlayerI.animd > PlayerI.animspeed then
+		PlayerI.animd = 0
+		if PlayerI.animframe < 5 then
+			PlayerI.animframe = PlayerI.animframe + 1
+		else
+			PlayerI.animframe = 1
+		end
+		
+	end
 end
 
 

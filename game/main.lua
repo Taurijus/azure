@@ -6,6 +6,7 @@ dofile(src..'menu.lua')
 dofile(src..'VectorEd.lua')
 
 function loadGame()
+	dofile(src..'animation.lua')
 	--dofile(src..'dragon.lua')
 	dofile(src..'PlayerI.lua')
 	dofile(src..'bullet.lua')
@@ -98,25 +99,28 @@ end
 function love.draw()
 	if state == 0 then 
 		mainMenu.draw();
-	elseif state == 1 and isGameLoaded then
-		love.graphics.push()
-		love.graphics.translate(scrWidth/2 - PlayerI.x, scrHeight/2 - PlayerI.y)
-		mapping.draw()
-		--dragon.draw()
-		Clients.draw ()
-		AIM.draw()
-		Shop.draw()
-		Bullet.draw()
-		PlayerI.draw()
-		--VectorEd.draw()
-		love.graphics.pop()
-		sleepBar.draw()
-		healthBar.draw()
-		Inventory.draw()
-		frame.draw()
-		love.graphics.print(PlayerI.x .. " : " .. PlayerI.y, 300, 500)
-	elseif state == 1 and not isGameLoaded then
-                love.graphics.draw(mainMenu.imageLoading, 0, 0)
+	elseif state == 1 then
+		if not isGameLoaded then
+			love.graphics.draw(mainMenu.imageLoading, 0, 0)
+		else
+			love.graphics.push()
+			love.graphics.translate(scrWidth/2 - PlayerI.x, scrHeight/2 - PlayerI.y)
+			mapping.draw()
+			--dragon.draw()
+			Clients.draw ()
+			AIM.draw()
+			Shop.draw()
+			Bullet.draw()
+			PlayerI.draw()
+			--VectorEd.draw()
+			love.graphics.pop()
+			sleepBar.draw()
+			healthBar.draw()
+			Inventory.draw()
+			frame.draw()
+			--love.graphics.print(PlayerI.x .. " : " .. PlayerI.y, 300, 500)
+			--love.graphics.print(text, 300, 550)
+		end
 	elseif state == 2 then
 		love.graphics.push()
 		love.graphics.translate(scrWidth/2 - PlayerI.x, scrHeight/2 - PlayerI.y)
@@ -132,7 +136,6 @@ function love.draw()
 		healthBar.draw()
 		Inventory.draw()
 		frame.draw()
-		love.graphics.print(PlayerI.x .. " : " .. PlayerI.y, 300, 500)
 		pauseMenu.draw()
 	end
 end
