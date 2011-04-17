@@ -90,3 +90,65 @@ function PlayerI.draw()
 	love.graphics.draw(PlayerI.image, PlayerI.x, PlayerI.y, PlayerI.rot, -1, 1, PlayerI.offx, PlayerI.offy)	
 	Inventory.draw()
 end
+
+Clients = {}
+function Clients.load ()
+	Clients.IPTable = {}
+	rasta  = 0
+	totalClients = 0
+	Clients.image = love.graphics.newImage (pre.."3.png")
+end
+
+function Clients.add (ip)
+	totalClients = totalClients + 1
+	table.insert (Clients.IPTable,
+	{
+		cip = ip,
+		id = totalClients,
+		oh = 32,
+		ov = 32,
+		x = 0,
+		y = 0,
+		r = 0,
+		drawable = false
+	})
+end
+
+function Clients.remove (ip)
+	for i , C in ipairs (Clients.IPTable) do
+		if C.cip == ip then
+			C.drawable = false
+			break
+		end
+	end
+end
+
+function Clients.check (ip)
+	for i , C in ipairs (Clients.IPTable) do
+	   rasta = 1
+		if C.cip == ip then
+			return C.id
+		end
+	end
+	return 0
+end
+
+function Clients.update (id, x, y, r)
+	for i , C in ipairs (Clients.IPTable) do
+		if C.id == id then
+			C.x = x
+			C.y = y
+			C.r = r
+			C.drawable = true
+			break
+		end
+	end
+end
+
+function Clients.draw ()
+	for i , C in ipairs (Clients.IPTable) do
+		if C.drawable then
+			love.graphics.draw (Clients.image, C.x, C.y, C.r, 1, 1, C.oh, C.ov)
+		end
+	end
+end
