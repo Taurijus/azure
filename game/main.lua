@@ -6,7 +6,7 @@ dofile(src..'menu.lua')
 dofile(src..'VectorEd.lua')
 
 function loadGame()
-	dofile(src..'dragon.lua')
+	--dofile(src..'dragon.lua')
 	dofile(src..'PlayerI.lua')
 	dofile(src..'bullet.lua')
 	--dofile(src..'AI.lua')
@@ -19,11 +19,11 @@ function loadGame()
 	dofile(src..'frame.lua')
 	pauseMenu.load()
 	--Physics
-	world = love.physics.newWorld(-1*scrWidth,-1*scrHeight, scrWidth, scrHeight)
+	world = love.physics.newWorld(0, 0, scrWidth, scrHeight)
 	world:setGravity(0,0)
 	world:setCallbacks(add, persist, rem, result)
 	world:setAllowSleep(false)
-    dragon.load()
+    --dragon.load()
     PlayerI.load()
 	Clients.load ()
 	Bullet.load ()
@@ -56,12 +56,13 @@ function persist(a, b, coll)
 	end
 end
 
+text = "physic test"
 function rem(a, b, coll)
-    --text = a.." uncolliding "..b.."\n"
+    text = a.." uncolliding "..b.."\n"
 end
 
 function result(a, b, coll)
-    --text = a.." hit "..b.."resulting with "..coll:getNormal().."\n"
+    text = a.." hit "..b.."resulting with "..coll:getNormal().."\n"
 end
 
 function love.update(dt)
@@ -76,9 +77,10 @@ function love.update(dt)
 			state = 2;
 			pauseDelta = 0
 		end
+		Shop.update(dt)
 		pauseDelta = pauseDelta + dt
 		dlt = dt
-		dragon.update(dt)
+		--dragon.update(dt)
 		PlayerI.update(dt)
 		AIM.update(dt)
 		Bullet.update (dt)
@@ -87,11 +89,6 @@ function love.update(dt)
 		sounds.update (dt)
 		Networking.update (dt)
 		--VectorEd.update (dt)
-		--[[
-		if love.keyboard.isDown("escape") then
-			love.quit()
-		end
-		]]
 		world:update(dt)
 	elseif state == 2 then
 		pauseMenu.update(dt)
@@ -105,7 +102,7 @@ function love.draw()
 		love.graphics.push()
 		love.graphics.translate(scrWidth/2 - PlayerI.x, scrHeight/2 - PlayerI.y)
 		mapping.draw()
-		dragon.draw()
+		--dragon.draw()
 		Clients.draw ()
 		AIM.draw()
 		Shop.draw()
@@ -118,11 +115,12 @@ function love.draw()
 		Inventory.draw()
 		frame.draw()
 		love.graphics.print(PlayerI.x .. " : " .. PlayerI.y, 300, 500)
+		love.graphics.print(text, 300, 550)
 	elseif state == 2 then
 		love.graphics.push()
 		love.graphics.translate(scrWidth/2 - PlayerI.x, scrHeight/2 - PlayerI.y)
 		mapping.draw()
-		dragon.draw()
+		--dragon.draw()
 		Clients.draw ()
 		AIM.draw()
 		Shop.draw()
