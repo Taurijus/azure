@@ -58,7 +58,8 @@ function pauseMenu.update(dt)
 		if (mouseInArea(356, 327, 526, 370) and love.mouse.isDown("l")) or love.keyboard.isDown("escape") then 
 			state = 1;
 			pauseDelta = 0
-		elseif mouseInArea(356, 407, 526, 453) and love.mouse.isDown("l") then
+		elseif (mouseInArea(356, 407, 526, 453) and love.mouse.isDown("l")) or
+			love.keyboard.isDown('q') then
 			love.quit()
 		end
 	end

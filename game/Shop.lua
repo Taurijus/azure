@@ -33,7 +33,10 @@ function Shop.AddShop(xx, yy, weaponid)
 end
 
 function Shop.update(dt)
-
+	local onshop = Shop.OnShop(PlayerI.x, PlayerI.y)
+	if onshop ~= 0 then
+		Inventory.BuyWeapon(onshop, dt)
+	end
 end
 
 
