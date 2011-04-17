@@ -7,15 +7,8 @@ function sleepBar.load(x, y, w, h)
 	sleepBar.lvl = sleepBar.max_lvl;
 end
 
-function sleepBar.update(dt, d) -- d - trukdymo lygis [0;1]
--- paskaiciuoti pagal tai, ar veikejas juda, ant kokio pavirsiau yra, koki ginkla naudoja
-	if d <= 1 then
-		sleepBar.lvl = d * sleepBar.max_lvl  -- issibudinimo lygis dideja priklausomai nuo trukdymo
-	else
-		if sleepBar.lvl > 0 then
-			sleepBar.lvl = sleepBar.lvl - 10 * dt  -- kai netrukdoma, mazeja per laika
-		end
-	end
+function sleepBar.update()
+	sleepBar.lvl = Dragon.angriness/100 * sleepBar.max_lvl  
 end
 
 function sleepBar.draw()

@@ -114,6 +114,8 @@ function love.draw()
 		Inventory.draw()
 		frame.draw()
 		love.graphics.print(PlayerI.x .. " : " .. PlayerI.y, 300, 500)
+	elseif state == 1 and not isGameLoaded then
+                love.graphics.draw(mainMenu.imageLoading, 0, 0)
 	elseif state == 2 then
 		love.graphics.push()
 		love.graphics.translate(scrWidth/2 - PlayerI.x, scrHeight/2 - PlayerI.y)
@@ -126,7 +128,7 @@ function love.draw()
 		PlayerI.draw()
 		love.graphics.pop()
 		sleepBar.draw()
-		--healthBar.draw()
+		healthBar.draw()
 		Inventory.draw()
 		frame.draw()
 		love.graphics.print(PlayerI.x .. " : " .. PlayerI.y, 300, 500)
@@ -135,7 +137,7 @@ function love.draw()
 end
 
 function love.quit()
-	-- just some delay before quiting, to make impression we are saving the game
+	-- just some delay before quitting, to make impression we are saving the game
 	love.timer.sleep(500)
 	love.event.push('q')
 end

@@ -95,10 +95,10 @@ function AIM.create_dragon()
 			rot = 0,
 			health = 999999,
 			zone = 70,						-- apytikris pavojaus spindulys (for now, jei arti prieina)
-			angryness = 0,					-- laikas, kai drakas piktas. kai būna piktas ilgą laiką, vėliau apsnūsta ir grįžta
+			angriness = 0,					-- laikas, kai drakas piktas. kai būna piktas ilgą laiką, vėliau apsnūsta ir grįžta
 			greitis = 10,
-			angryness_add = 10,
-			max_angryness = 100
+			angriness_add = 10,
+			max_angriness = 100
 		  }
 end
 
@@ -153,26 +153,26 @@ function AIM.dragon_state(dt)
 	if Dlinija < Dragon.zone * Dragon.zone
 		then
 			Dragon.state = "angry"
-			if Dragon.angryness <= Dragon.max_angryness then
-				Dragon.angryness = Dragon.angryness + Dragon.angryness_add
+			if Dragon.angriness <= Dragon.max_angriness then
+				Dragon.angriness = Dragon.angriness + Dragon.angriness_add
 			end
 	end
 	
-	if Dragon.angryness <= 0
+	if Dragon.angriness <= 0
 		then
 			if Dragon.x == D[1][1] and Dragon.y == D[1][2]		-- jei parsivilko namo
 				then
-					Dragon.angryness = 0
+					Dragon.angriness = 0
 					Dragon.state = "sleepy"
 				else
-					Dragon.angryness = 0
+					Dragon.angriness = 0
 					Dragon.state = "home"
 			end
 		else
-			Dragon.angryness = Dragon.angryness - dt*10
+			Dragon.angriness = Dragon.angriness - dt*10
 	end
 	
-	if Dlinija < Dragon.zone * Dragon.zone * 4 and Dragon.angryness == 0	-- jei yra 4-gubu atstumu už zonos, yra nervingas
+	if Dlinija < Dragon.zone * Dragon.zone * 4 and Dragon.angriness == 0	-- jei yra 4-gubu atstumu už zonos, yra nervingas
 		then
 			Dragon.state = "annoyed"
 		end
@@ -439,6 +439,6 @@ function AIM.botu_info()
 		love.graphics.print(text2, 800, 600 + i * 20)
 	end
 	
-	text3 = "Drago busena: "..Dragon.state.." Kitas wp: "..Dragon.kitasD.." Atstumas: "..math.sqrt(Dlinija).." Angryness: "..Dragon.angryness --vėliau sqrt nuimti
+	text3 = "Drago busena: "..Dragon.state.." Kitas wp: "..Dragon.kitasD.." Atstumas: "..math.sqrt(Dlinija).." angriness: "..Dragon.angriness --vėliau sqrt nuimti
 	love.graphics.print(text3, 750, 580)	
 end
