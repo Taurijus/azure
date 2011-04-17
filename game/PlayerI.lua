@@ -53,11 +53,24 @@ function PlayerI.update(dt)
 	end
 	
 	if anykey then
-		local moveVectorInvLen = 200 * dt / math.sqrt (moveVectorX * moveVectorX + moveVectorY * moveVectorY)
-		moveVectorX = moveVectorX * moveVectorInvLen
-		moveVectorY = moveVectorY * moveVectorInvLen
+		local moveVectorInvLen = 1.0 / math.sqrt (moveVectorX * moveVectorX + moveVectorY * moveVectorY)
+		moveVectorX = moveVectorX * moveVectorInvLen * dt * 200
+		moveVectorY = moveVectorY * moveVectorInvLen * dt * 200
 		
-		if mapping.intersect (PlayerI.x, PlayerI.y, PlayerI.x + moveVectorX, PlayerI.y + moveVectorY) ~= true then
+		local hit, index = mapping.intersect (PlayerI.x, PlayerI.y, PlayerI.x + moveVectorX, PlayerI.y + moveVectorY)
+		if hit then
+			local wallDeltaX = mapping.wall[index].x2 - mapping.wall[index].x1
+			local wallDeltaY = mapping.wall[index].y2 - mapping.wall[index].y1
+			local wallDeltaInvLen = 1.0 / math.sqrt (wallDeltaX * wallDeltaX + wallDeltaY * wallDeltaY)
+			wallDeltaX = wallDeltaX * wallDeltaInvLen
+			wallDeltaY = wallDeltaY * wallDeltaInvLen
+			local dot = moveVectorX * wallDeltaX + moveVectorY * wallDeltaY
+			hit, index = mapping.intersect (PlayerI.x, PlayerI.y, PlayerI.x + wallDeltaX * dot, PlayerI.y + wallDeltaY * dot)
+			if not hit then
+				PlayerI.x = PlayerI.x + wallDeltaX * dot
+				PlayerI.y = PlayerI.y + wallDeltaY * dot
+			end
+		else
 			PlayerI.x = PlayerI.x + moveVectorX
 			PlayerI.y = PlayerI.y + moveVectorY
 		end
