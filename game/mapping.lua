@@ -158,11 +158,11 @@ function mapping.intersect (x1, y1, x2, y2)
 				local ub = ((x2 - x1) * (y1 - mapping.wall[i].y1) - (y2 - y1) * (x1 - mapping.wall[i].x1)) / denom
 				if ub > 0 and ub < 1
 					then
-						return true	
+						return true, i
 				end
 			end
 		end	
 	end
-	return false
+	return false, 0
 end
 
