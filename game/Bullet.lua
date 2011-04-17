@@ -56,7 +56,10 @@ function Bullet.lineCross (bullet, obj)
 end
 
 function Bullet.rectCross (bullet, obj)
-	if obj.x1 < bullet.x and  bullet.x < obj.x2 and obj.y1 < bullet.y and  bullet.y < obj.y2 then return true end
+	if obj.x1 < bullet.x and  bullet.x < obj.x2 and
+		obj.y1 < bullet.y and  bullet.y < obj.y2 then
+		return true
+	end
 end
 
 function Bullet.draw()
