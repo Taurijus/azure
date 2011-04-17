@@ -63,22 +63,22 @@ W[35] = {1960, 850, 36, 36, 36, 36, 36, 34, 36, 36, 36, 36}
 W[36] = {1540, 580, 22, 25, 22, 22, 22, 22, 22, 22, 22, 22}
 W[37] = {665, 1230, 24, 24,2 ,2 ,24, 24, 24, 24, 2 , 2}
 
--- drako waypoint'ai (koordX, koordY, angryWay1, angryWay2, angryWay3)
-D[1] = {990, 680, 2, 3, 3}		-- drako centras
-D[2] = {1300, 700, 2, 13, 14}
-D[3] = {765, 695, 8, 9, 8}
-D[4] = {865, 915, 11, 3, 1}
-D[5] = {1060, 550, 6, 3, 6}
-D[6] = {1060, 425, 12, 4, 4}
+-- drako waypoint'ai (koordX, koordY, angryWay1, angryWay2, angryWay3, home)
+D[1] = {990, 680, 2, 3, 3, 1}		-- drako centras
+D[2] = {1300, 700, 2, 13, 14, 1}
+D[3] = {765, 695, 8, 9, 8, 1}
+D[4] = {865, 915, 11, 3, 1, 1}
+D[5] = {1060, 550, 6, 3, 6, 1}
+D[6] = {1060, 425, 12, 4, 4, 1}
 --D[7] = {1300, 700, 2, 13, 5} dar nėra :D
-D[8] = {615, 615, 9, 1, 9}
-D[9] = {750, 520, 5, 5, 5}
-D[10] = {585, 790, 3, 11, 3}
-D[11] = {675, 905, 10, 1, 4}
-D[12] = {1025, 920, 15, 4, 15}
-D[13] = {1255, 805, 12, 5, 14}
-D[14] = {1350, 865, 13, 2, 15}
-D[15] = {955, 1140, 11, 14, 11}
+D[8] = {615, 615, 9, 1, 9, 1}
+D[9] = {750, 520, 5, 5, 5, 1}
+D[10] = {585, 790, 3, 11, 3, 1}
+D[11] = {675, 905, 10, 1, 4, 1}
+D[12] = {1025, 920, 15, 4, 15, 1}
+D[13] = {1255, 805, 12, 5, 14, 1}
+D[14] = {1350, 865, 13, 2, 15, 1}
+D[15] = {955, 1140, 11, 14, 11, 1}
 
 
 -- drako funkcijos, iškėliau kad suprast eitų
@@ -97,7 +97,8 @@ function AIM.create_dragon()
 			zone = 70,						-- apytikris pavojaus spindulys (for now, jei arti prieina)
 			angryness = 0,					-- laikas, kai drakas piktas. kai būna piktas ilgą laiką, vėliau apsnūsta ir grįžta
 			greitis = 10,
-			angryness_add = 10
+			angryness_add = 10,
+			max_angryness = 100
 		  }
 end
 
@@ -106,7 +107,7 @@ function AIM.update_dragon(dt)
 	AIM.dragon_image()
 	math.randomseed(os.time())
 	math.random()
-	if Dragon.state == "angry"
+	if Dragon.state == "angry" or Dragon.state == "home"		-- jei reikia judėti
 		then
 			-- judama link kitos koord.
 			if (D[Dragon.kitasD][1] - Dragon.x < 0)				-- (jei neigiamas)
@@ -124,7 +125,12 @@ function AIM.update_dragon(dt)
 			
 			if D[Dragon.kitasD][1] == Dragon.x and D[Dragon.kitasD][2] == Dragon.y
 			then 	-- renkamės kitą wp
-				Dragon.kitasD = D[Dragon.kitasD][math.floor(3 + math.random(0.5, 2.5))]
+				if Dragon.state == "angry"
+					then
+						Dragon.kitasD = D[Dragon.kitasD][math.floor(3 + math.random(0.5, 2.5))]
+					else
+						Dragon.kitasD = D[Dragon.kitasD][6]	
+				end				
 			end
 	end
 	
@@ -147,24 +153,38 @@ function AIM.dragon_state(dt)
 	if Dlinija < Dragon.zone * Dragon.zone
 		then
 			Dragon.state = "angry"
-			Dragon.angryness = Dragon.angryness + Dragon.angryness_add
-			sleepBar.update(dt, 1)
-		end
+			if Dragon.angryness <= Dragon.max_angryness then
+				Dragon.angryness = Dragon.angryness + Dragon.angryness_add
+			end
+	end
 	
 	if Dragon.angryness <= 0
 		then
-			Dragon.angryness = 0
-			Dragon.state = "sleepy"
+			if Dragon.x == D[1][1] and Dragon.y == D[1][2]		-- jei parsivilko namo
+				then
+					Dragon.angryness = 0
+					Dragon.state = "sleepy"
+				else
+					Dragon.angryness = 0
+					Dragon.state = "home"
+			end
 		else
 			Dragon.angryness = Dragon.angryness - dt*10
 	end
 	
+	if Dlinija < Dragon.zone * Dragon.zone * 4 and Dragon.angryness == 0	-- jei yra 4-gubu atstumu už zonos, yra nervingas
+		then
+			Dragon.state = "annoyed"
+		end
+	
 	----------------------- padaryti, kai grįžta į normalų state.
 end
 
--- funkcija, pakeičianti drakono paveikslėlį pagal state
+-- funkcija, pakeičianti drakono paveikslėlį pagal state                -- TODO - animuoti pagal tai, į kurią pusę eina?
 function AIM.dragon_image()
-	if Dragon.state == "angry" then Dragon.image = love.graphics.newImage(pre.."Dragon sprites/drakonas is priekio/prdark1.png") end
+	if Dragon.state == "angry" then Dragon.image = love.graphics.newImage(pre.."Dragon sprites/angrydark1.png") end
+	if Dragon.state == "annoyed" then Dragon.image = love.graphics.newImage(pre.."Dragon sprites/angrydark1.png") end
+	if Dragon.state == "home" then Dragon.image = love.graphics.newImage(pre.."Dragon sprites/drakonas is priekio/prdark1.png") end
 	if Dragon.state == "sleepy" then Dragon.image = love.graphics.newImage(pre.."Dragon sprites/sleepydark.png") end
 end
 
@@ -413,12 +433,12 @@ end
 
 function AIM.botu_info()
 	text1 = "Botu sk: "..AIM.n
-	love.graphics.print(text1, 650, 500)
+	love.graphics.print(text1, 750, 600)
 	for i = 1, AIM.n do
 	text2 = "Bot "..i.." ginklas: "..BOT[i].weapon.." state: "..BOT[i].state.." gold: ".. BOT[i].gold.." wp: "..BOT[i].kitasW
-		love.graphics.print(text2, 700, 500 + i * 20)
+		love.graphics.print(text2, 800, 600 + i * 20)
 	end
 	
 	text3 = "Drago busena: "..Dragon.state.." Kitas wp: "..Dragon.kitasD.." Atstumas: "..math.sqrt(Dlinija).." Angryness: "..Dragon.angryness --vėliau sqrt nuimti
-	love.graphics.print(text3, 650, 480)	
+	love.graphics.print(text3, 750, 580)	
 end
