@@ -62,6 +62,54 @@ W[35] = {1960, 850, 36, 36, 36, 36, 36, 34, 36, 36, 36, 36}
 W[36] = {1540, 580, 22, 25, 22, 22, 22, 22, 22, 22, 22, 22}
 W[37] = {665, 1230, 24, 24,2 ,2 ,24, 24, 24, 24, 2 , 2}
 
+-- drako waypoint'ai
+W[38] = {990, 680}		-- drako centras
+
+-- drako funkcijos, iškėliau kad suprast eitų
+function AIM.create_dragon()
+	Dragon = {
+			x = W[38][1],
+			y = W[38][2],
+			--kitasW = W[AIM.startW][math.floor(3 + math.random(0, 2), 0)],			
+			state = "sleepy", --angry, attack
+			weapon = "fangs and superpowers",
+			gold = 999999,					-- pradžioje nėra aukso
+			rot = 0,
+			health = 999999,
+			zone = 70,						-- apytikris pavojaus spindulys (for now, jei arti prieina)
+			angryness = 0					-- laikas, kai drakas piktas. kai būna piktas ilgą laiką, vėliau apsnūsta ir grįžta
+		  }
+end
+
+function AIM.update_dragon(dt)
+	AIM.dragon_state()
+	AIM.dragon_image()
+end
+
+function AIM.draw_dragon()
+	love.graphics.draw(Dragon.image, Dragon.x,
+				Dragon.y, Dragon.rot, 1, 1, 60, 60)
+end
+
+
+
+-- funkcija patikrina žaidėją ar jis neatėjo prie drakono
+-- jeigu atėjo, keičia state į "angry"
+-- jei praėjo daugiau laiko, eina miegot
+-- TODO - patikrint ir botus kažkada :D
+function AIM.dragon_state(dt)
+	Dlinija = (Dragon.x - PlayerI.x) * (Dragon.x - PlayerI.x)
+		   + (Dragon.y - PlayerI.y) * (Dragon.y - PlayerI.y)
+	if Dlinija < Dragon.zone * Dragon.zone then Dragon.state = "angry" end
+	
+	----------------------- padaryti, kai grįžta į normalų state.
+end
+
+function AIM.dragon_image()
+	if Dragon.state == "angry" then Dragon.image = love.graphics.newImage(pre.."Dragon sprites/drakonas is priekio/prdark1.png") end
+	if Dragon.state == "sleepy" then Dragon.image = love.graphics.newImage(pre.."Dragon sprites/sleepydark.png") end
+end
+
 
 -- n - botų skaičius
 function AIM.load()
@@ -71,6 +119,7 @@ function AIM.load()
 
 	AIM.n = 0 --pirmas botas
 	AIM.create_bot()
+	AIM.create_dragon()
 end
 
 function AIM.create_bot()
@@ -149,6 +198,7 @@ function AIM.update(dt)
 		--atnaujinam inventorių, jei įmanoma
 		AIM.update_inventory(i)	
 	end	
+	AIM.update_dragon(dt)
 end
 
 
@@ -158,6 +208,7 @@ function AIM.draw()
 				BOT[i].y, BOT[i].rot, 1, 1, 32, 32)
 	end
 	AIM.botu_info()
+	AIM.draw_dragon()
 end
 
 function AIM.choose_state(i)
@@ -309,4 +360,7 @@ function AIM.botu_info()
 	text2 = "Bot "..i.." ginklas: "..BOT[i].weapon.." state: "..BOT[i].state.." gold: ".. BOT[i].gold.." wp: "..BOT[i].kitasW
 		love.graphics.print(text2, 700, 500 + i * 20)
 	end
+	
+	text3 = "Drago busena: "..Dragon.state.." Drakono xy: "..Dragon.x.." "..Dragon.y.." Playerio xy: "..PlayerI.x.. " "..PlayerI.y.." Atstumas: "..math.sqrt(Dlinija) --vėliau sqrt nuimti
+	love.graphics.print(text3, 650, 480)	
 end
