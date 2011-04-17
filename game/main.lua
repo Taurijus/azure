@@ -10,6 +10,7 @@ dofile(src..'AIM.lua')
 dofile(src..'Bar.lua')
 dofile(src..'Mapping.lua')
 dofile (src..'Sounds.lua')
+dofile(src..'Networking.lua')
 
 function love.load()
 	scrWidth = 1024
@@ -24,14 +25,14 @@ function love.load()
 	world:setAllowSleep(false)
     dragon.load()
     PlayerI.load()
+	Clients.load ()
 	Bullet.load ()
 	mapping.load()
 	sleepBar.load(0, 100, 36, 266)
 	healthBar.load(0, 350, 36, 266)
 	sounds.load ()
-	
+	Networking.load ()
 	AIM.load()
-
 end
 
 function add(a, b, coll)
@@ -61,6 +62,7 @@ function love.update(dt)
 	sleepBar.update(dt, 0.5)
 	healthBar.update()
 	sounds.update (dt)
+	Networking.update (dt)
 	if love.keyboard.isDown("escape") then
 		love.quit()
 	end
@@ -71,9 +73,8 @@ function love.draw()
 	mapping.draw()
 	dragon.draw()
 	PlayerI.draw()
+	Clients.draw ()
 	AIM.draw()
-	-- WTF? why bullets are drawn under map???? io.OO
-	-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	--sleepBar.draw()
 	--healthBar.draw()
 end

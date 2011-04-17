@@ -60,7 +60,7 @@ function Bullet.rectCross (bullet, obj)
 end
 
 function Bullet.draw()
-	for i , bullet in ipairs(Bullet.List) do
+	for i, bullet in ipairs(Bullet.List) do
 		love.graphics.draw(Bullet.image, bullet.x, bullet.y, bullet.r, 1, 1, 16, 16)
 	end
 end
