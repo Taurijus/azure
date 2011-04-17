@@ -24,6 +24,7 @@ AIM.max_bot = 8					-- botų skaičius
 -- TODO 11 - bus health'o ieškoti
 
 W = {}
+D = {}
 W[1] = {960, 1150, 2, 20, 1, 1, 2, 20, 20, 3, 20, 20} 		 -- spawn point 1
 W[2] = {760, 1010, 3, 37, 1, 1, 3, 37, 1, 37, 3, 1}
 W[3] = {710, 900, 4, 21, 2, 2, 4, 4, 2, 21, 21, 21}
@@ -62,28 +63,71 @@ W[35] = {1960, 850, 36, 36, 36, 36, 36, 34, 36, 36, 36, 36}
 W[36] = {1540, 580, 22, 25, 22, 22, 22, 22, 22, 22, 22, 22}
 W[37] = {665, 1230, 24, 24,2 ,2 ,24, 24, 24, 24, 2 , 2}
 
--- drako waypoint'ai
-W[38] = {990, 680}		-- drako centras
+-- drako waypoint'ai (koordX, koordY, angryWay1, angryWay2, angryWay3)
+D[1] = {990, 680, 2, 3, 3}		-- drako centras
+D[2] = {1300, 700, 2, 13, 14}
+D[3] = {765, 695, 8, 9, 8}
+D[4] = {865, 915, 11, 3, 1}
+D[5] = {1060, 550, 6, 3, 6}
+D[6] = {1060, 425, 12, 4, 4}
+--D[7] = {1300, 700, 2, 13, 5} dar nėra :D
+D[8] = {615, 615, 9, 1, 9}
+D[9] = {750, 520, 5, 5, 5}
+D[10] = {585, 790, 3, 11, 3}
+D[11] = {675, 905, 10, 1, 4}
+D[12] = {1025, 920, 15, 4, 15}
+D[13] = {1255, 805, 12, 5, 14}
+D[14] = {1350, 865, 13, 2, 15}
+D[15] = {955, 1140, 11, 14, 11}
+
 
 -- drako funkcijos, iškėliau kad suprast eitų
 function AIM.create_dragon()
+	math.randomseed(os.time())
+	math.random()
 	Dragon = {
-			x = W[38][1],
-			y = W[38][2],
-			--kitasW = W[AIM.startW][math.floor(3 + math.random(0, 2), 0)],			
+			x = D[1][1],
+			y = D[1][2],
+			kitasD = D[1][math.floor(3 + math.random(0.5, 2.5))],			
 			state = "sleepy", --angry, attack
 			weapon = "fangs and superpowers",
 			gold = 999999,					-- pradžioje nėra aukso
 			rot = 0,
 			health = 999999,
 			zone = 70,						-- apytikris pavojaus spindulys (for now, jei arti prieina)
-			angryness = 0					-- laikas, kai drakas piktas. kai būna piktas ilgą laiką, vėliau apsnūsta ir grįžta
+			angryness = 0,					-- laikas, kai drakas piktas. kai būna piktas ilgą laiką, vėliau apsnūsta ir grįžta
+			greitis = 10,
+			angryness_add = 10
 		  }
 end
 
 function AIM.update_dragon(dt)
-	AIM.dragon_state()
+	AIM.dragon_state(dt)
 	AIM.dragon_image()
+	math.randomseed(os.time())
+	math.random()
+	if Dragon.state == "angry"
+		then
+			-- judama link kitos koord.
+			if (D[Dragon.kitasD][1] - Dragon.x < 0)				-- (jei neigiamas)
+				then Dragon.x = Dragon.x - greitis
+				else Dragon.x = Dragon.x + greitis
+			end		
+			if (D[Dragon.kitasD][2] - Dragon.y < 0)  			-- (jei neigiamas)
+				then Dragon.y = Dragon.y - greitis
+				else Dragon.y = Dragon.y + greitis
+			end	
+			
+			-- jeigu esam taip arti, kad mažiau už vieno judesio atstumą
+			if math.abs(D[Dragon.kitasD][1] - Dragon.x) <= 5 then Dragon.x = D[Dragon.kitasD][1] end
+			if math.abs(D[Dragon.kitasD][2] - Dragon.y) <= 5 then Dragon.y = D[Dragon.kitasD][2] end
+			
+			if D[Dragon.kitasD][1] == Dragon.x and D[Dragon.kitasD][2] == Dragon.y
+			then 	-- renkamės kitą wp
+				Dragon.kitasD = D[Dragon.kitasD][math.floor(3 + math.random(0.5, 2.5))]
+			end
+	end
+	
 end
 
 function AIM.draw_dragon()
@@ -100,11 +144,25 @@ end
 function AIM.dragon_state(dt)
 	Dlinija = (Dragon.x - PlayerI.x) * (Dragon.x - PlayerI.x)
 		   + (Dragon.y - PlayerI.y) * (Dragon.y - PlayerI.y)
-	if Dlinija < Dragon.zone * Dragon.zone then Dragon.state = "angry" end
+	if Dlinija < Dragon.zone * Dragon.zone
+		then
+			Dragon.state = "angry"
+			Dragon.angryness = Dragon.angryness + Dragon.angryness_add
+			sleepBar.update(dt, 1)
+		end
+	
+	if Dragon.angryness <= 0
+		then
+			Dragon.angryness = 0
+			Dragon.state = "sleepy"
+		else
+			Dragon.angryness = Dragon.angryness - dt*10
+	end
 	
 	----------------------- padaryti, kai grįžta į normalų state.
 end
 
+-- funkcija, pakeičianti drakono paveikslėlį pagal state
 function AIM.dragon_image()
 	if Dragon.state == "angry" then Dragon.image = love.graphics.newImage(pre.."Dragon sprites/drakonas is priekio/prdark1.png") end
 	if Dragon.state == "sleepy" then Dragon.image = love.graphics.newImage(pre.."Dragon sprites/sleepydark.png") end
@@ -127,7 +185,7 @@ function AIM.create_bot()
 	BOT[AIM.n] = {image = love.graphics.newImage(pre.."AI.gif"),
 			x = W[AIM.startW][1],
 			y = W[AIM.startW][2],
-			kitasW = W[AIM.startW][math.floor(3 + math.random(0, 2), 0)],
+			kitasW = W[AIM.startW][math.floor(3 + math.random(0.5, 1.5))],
 			
 				-- pradiniai parametrai
 			state = "gold",				-- pradinis state eina prie aukso
@@ -160,16 +218,16 @@ function AIM.update(dt)
 			then 											-- renkamės kitą wp
 				if BOT[i].state == "gold"
 					then
-						BOT[i].kitasW = W[BOT[i].kitasW][math.floor(3 + math.random(0, 2), 0)]
+						BOT[i].kitasW = W[BOT[i].kitasW][math.floor(3 + math.random(0.5, 1.5))]
 					elseif BOT[i].state == "spawn"
 							then
-								BOT[i].kitasW = W[BOT[i].kitasW][math.floor(5 + math.random(0, 2), 0)]
+								BOT[i].kitasW = W[BOT[i].kitasW][math.floor(5 + math.random(0.5, 1.5))]
 							elseif BOT[i].state == "weapon"
 									then
-										BOT[i].kitasW = W[BOT[i].kitasW][math.floor(7 + math.random(0, 2), 0)]
+										BOT[i].kitasW = W[BOT[i].kitasW][math.floor(7 + math.random(0.5, 1.5))]
 									elseif BOT[i].state == "hunt"
 										then
-											BOT[i].kitasW = W[BOT[i].kitasW][math.floor(9 + math.random(0, 2), 0)]
+											BOT[i].kitasW = W[BOT[i].kitasW][math.floor(9 + math.random(0.5, 1.5))]
 										end
 			else 	-- einam toliau link waypoint
 			
@@ -183,8 +241,8 @@ function AIM.update(dt)
 					else BOT[i].y = BOT[i].y + greitis * BOT[i].speed_modifier	
 				end
 				-- jeigu esam taip arti, kad mažiau už vieno judesio atstumą
-				if math.abs(W[BOT[i].kitasW][1] - BOT[i].x) <= 2 then BOT[i].x = W[BOT[i].kitasW][1] end
-				if math.abs(W[BOT[i].kitasW][2] - BOT[i].y) <= 2 then BOT[i].y = W[BOT[i].kitasW][2] end
+				if math.abs(W[BOT[i].kitasW][1] - BOT[i].x) <= 5 then BOT[i].x = W[BOT[i].kitasW][1] end
+				if math.abs(W[BOT[i].kitasW][2] - BOT[i].y) <= 5 then BOT[i].y = W[BOT[i].kitasW][2] end
 
 		end
 		if BOT[i].kitasW == nil then BOT[i].kitasW = 1 end
@@ -361,6 +419,6 @@ function AIM.botu_info()
 		love.graphics.print(text2, 700, 500 + i * 20)
 	end
 	
-	text3 = "Drago busena: "..Dragon.state.." Drakono xy: "..Dragon.x.." "..Dragon.y.." Playerio xy: "..PlayerI.x.. " "..PlayerI.y.." Atstumas: "..math.sqrt(Dlinija) --vėliau sqrt nuimti
+	text3 = "Drago busena: "..Dragon.state.." Kitas wp: "..Dragon.kitasD.." Atstumas: "..math.sqrt(Dlinija).." Angryness: "..Dragon.angryness --vėliau sqrt nuimti
 	love.graphics.print(text3, 650, 480)	
 end
