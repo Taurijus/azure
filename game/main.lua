@@ -13,6 +13,7 @@ dofile(src..'Mapping.lua')
 dofile (src..'Sounds.lua')
 dofile(src..'Networking.lua')
 dofile(src..'menu.lua')
+dofile(src..'VectorEd.lua')
 
 function loadGame()
 	pauseMenu.load()
@@ -40,6 +41,7 @@ function love.load()
 	vsync = false
 	love.graphics.setMode(scrWidth, scrHeight, isFullscreen, vsync, 0 )
 	mainMenu.load()
+	--VectorEd.load()
 end
 
 function add(a, b, coll)
@@ -82,6 +84,7 @@ function love.update(dt)
 		healthBar.update()
 		sounds.update (dt)
 		Networking.update (dt)
+		--VectorEd.update (dt)
 		--[[
 		if love.keyboard.isDown("escape") then
 			love.quit()
@@ -106,6 +109,7 @@ function love.draw()
 		Shop.draw()
 		Bullet.draw()
 		PlayerI.draw()
+		--VectorEd.draw()
 		love.graphics.pop()
 		--sleepBar.draw()
 		Inventory.draw()
