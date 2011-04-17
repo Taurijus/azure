@@ -19,6 +19,7 @@ function PlayerI.load()
 	PlayerI.offx = 32
 	PlayerI.offy = 58
 	PlayerI.TriggerLock = 0
+	PlayerI.Health = 100
 	--Player physics
 	phyPl = {}
     phyPl.b = love.physics.newBody(world, PlayerI.x, PlayerI.x, 1,0)
@@ -26,6 +27,7 @@ function PlayerI.load()
     phyPl.s:setData("Player")
 	phyPl.s:setSensor(true)
 	Inventory.load()
+	PlayerI.currentimage = PlayerI.image
 end
 
 function PlayerI.update(dt)
@@ -74,6 +76,17 @@ function PlayerI.update(dt)
 		end
 	end
 
+	--Log coords
+	if love.keyboard.isDown("i") then
+		coord = PlayerI.x.." "..PlayerI.y
+	end
+	local x, y = love.mouse.getPosition()
+	for i=1,4 do
+		if love.keyboard.isDown(i) and Inventory.weapon[i].have then
+			Inventory.actWeap = i
+		end
+	end
+
 	local x, y = love.mouse.getPosition()
 	--Physics coord move
 	phyPl.b:setX(PlayerI.x)	
@@ -88,7 +101,7 @@ function PlayerI.update(dt)
 	end
 	if love.mouse.isDown("l") and PlayerI.TriggerLock == 0 then
 		if Inventory.shoot() then
-			Bullet.AddShot(PlayerI.x, PlayerI.y,PlayerI.rot, 300)
+			Bullet.AddShot(PlayerI.x, PlayerI.y, PlayerI.rot, 300)
 			PlayerI.TriggerLock = 1
 		end
 	end
@@ -105,6 +118,9 @@ function PlayerI.draw()
 	--imapping.draw()
 	love.graphics.draw(PlayerI.image, PlayerI.x, PlayerI.y, PlayerI.rot, -1, 1, PlayerI.offx, PlayerI.offy)	
 end
+
+
+
 
 Clients = {}
 function Clients.load ()
