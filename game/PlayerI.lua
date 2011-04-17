@@ -34,36 +34,28 @@ function PlayerI.update(dt)
 	local x, y = love.mouse.getPosition()
 	if love.keyboard.isDown("left") or love.keyboard.isDown("a") then
 		PlayerI.x = PlayerI.x - 100 * dt
-		--[[
 		if mapping.wallTouch() then
 			PlayerI.x = PlayerI.x + 100 * dt
 		end
-		]]
     	end
     	if love.keyboard.isDown("right") or love.keyboard.isDown("d") then
 		PlayerI.x = PlayerI.x + 100 * dt
-		--[[
 		if mapping.wallTouch() then
 			PlayerI.x = PlayerI.x - 100 * dt
 		end
-		]]
     end
     	if love.keyboard.isDown("up") or love.keyboard.isDown("w") then
 		PlayerI.y = PlayerI.y - 100 * dt
-		--[[
 		if mapping.wallTouch() then
 			PlayerI.y = PlayerI.y + 100 * dt
 		end
-		]]
 
     	end
     	if love.keyboard.isDown("down") or love.keyboard.isDown("s") then
 		PlayerI.y = PlayerI.y + 100 * dt 
-		--[[
 		if mapping.wallTouch() then
 			PlayerI.y = PlayerI.y - 100 * dt
 		end
-		]]
 	end
 	--Physics coord move
 	phyPl.b:setX(PlayerI.x)	
