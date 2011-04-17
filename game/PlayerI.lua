@@ -31,40 +31,39 @@ function PlayerI.load()
 end
 
 function PlayerI.update(dt)
-	local x, y = love.mouse.getPosition()
+	local anykey = false
+	local moveVectorX = 0
+	local moveVectorY = 0
+	
 	if love.keyboard.isDown("left") or love.keyboard.isDown("a") then
-		PlayerI.x = PlayerI.x - 100 * dt
-		--[[
-		if mapping.wallTouch() then
-			PlayerI.x = PlayerI.x + 100 * dt
-		end
-		]]
-    	end
-    	if love.keyboard.isDown("right") or love.keyboard.isDown("d") then
-		PlayerI.x = PlayerI.x + 100 * dt
-		--[[
-		if mapping.wallTouch() then
-			PlayerI.x = PlayerI.x - 100 * dt
-		end
-		]]
-    end
-    	if love.keyboard.isDown("up") or love.keyboard.isDown("w") then
-		PlayerI.y = PlayerI.y - 100 * dt
-		--[[
-		if mapping.wallTouch() then
-			PlayerI.y = PlayerI.y + 100 * dt
-		end
-		]]
-
-    	end
-    	if love.keyboard.isDown("down") or love.keyboard.isDown("s") then
-		PlayerI.y = PlayerI.y + 100 * dt 
-		--[[
-		if mapping.wallTouch() then
-			PlayerI.y = PlayerI.y - 100 * dt
-		end
-		]]
+		moveVectorX = -1
+		anykey = true
 	end
+	if love.keyboard.isDown("right") or love.keyboard.isDown("d") then
+		moveVectorX = 1
+		anykey = true
+	end
+	if love.keyboard.isDown("up") or love.keyboard.isDown("w") then
+		moveVectorY = -1
+		anykey = true
+	end
+	if love.keyboard.isDown("down") or love.keyboard.isDown("s") then
+		moveVectorY = 1
+		anykey = true
+	end
+	
+	if anykey then
+		local moveVectorInvLen = 200 * dt / math.sqrt (moveVectorX * moveVectorX + moveVectorY * moveVectorY)
+		moveVectorX = moveVectorX * moveVectorInvLen
+		moveVectorY = moveVectorY * moveVectorInvLen
+		
+		if mapping.intersect (PlayerI.x, PlayerI.y, PlayerI.x + moveVectorX, PlayerI.y + moveVectorY) ~= true then
+			PlayerI.x = PlayerI.x + moveVectorX
+			PlayerI.y = PlayerI.y + moveVectorY
+		end
+	end
+
+	local x, y = love.mouse.getPosition()
 	--Physics coord move
 	phyPl.b:setX(PlayerI.x)	
 	phyPl.b:setY(PlayerI.y)
