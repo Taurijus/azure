@@ -100,10 +100,10 @@ function mapping.wallTouch()
 for i = 1, #mapping.wall do
                        local width = love.graphics.getWidth()
 			local height = love.graphics.getHeight()
-			local vx1 = mapping.wall[i].x1+mapping.x-(width/2)
-			local vy1 = mapping.wall[i].y1+mapping.y-(height/2)
-			local vx2 = mapping.wall[i].x2+mapping.x-(width/2)
-			local vy2 = mapping.wall[i].y2+mapping.y-(height/2)
+			local vx1 = mapping.wall[i].x1+PlayerI.x--(width/2)
+			local vy1 = mapping.wall[i].y1+PlayerI.y--(height/2)
+			local vx2 = mapping.wall[i].x2+PlayerI.x--(width/2)
+			local vy2 = mapping.wall[i].y2+PlayerI.y--(height/2)
 			local vx3 = mapping.wall[i].x2 - mapping.wall[i].x1
 			local vy3 = mapping.wall[i].y2 - mapping.wall[i].y1
 
@@ -129,18 +129,20 @@ function mapping.draw()
 
 	love.graphics.draw(mapping.image, mapping.x, mapping.y)
 		--love.graphics.setColor( 255, 255, 0, 100 ) --Debug version (cool color)
-		--[[for i = 1, #mapping.wall do
+		for i = 1, #mapping.wall do
                         --love.graphics.print(tostring(mapping.wall[i][j].x1), j * 50, i * 10)
 			local xx1 = mapping.wall[i].x1+mapping.x
 			local yy1 = mapping.wall[i].y1+mapping.y
 			local xx2 = mapping.wall[i].x2+mapping.x
 			local yy2 = mapping.wall[i].y2+mapping.y
 			love.graphics.line(xx1,yy1,xx2,yy2)
-                end
+		end
+		--[[
 	local width = love.graphics.getWidth()
 	local height = love.graphics.getHeight()
 	love.graphics.print(mapping.xx-mapping.x .. ' ' .. mapping.yy-mapping.y, mapping.xx,mapping.yy)
-	love.graphics.print(-mapping.x+width/2 .. ' ' ..-mapping.y+height/2,10,20)]]
+	love.graphics.print(-mapping.x+width/2 .. ' ' ..-mapping.y+height/2,10,20)
+	]]
 	
 
 end

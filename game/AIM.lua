@@ -153,8 +153,8 @@ end
 
 function AIM.draw()
 	for i = 1, AIM.n do
-		love.graphics.draw(BOT[i].image, BOT[i].x + mapping.x,
-				BOT[i].y + mapping.y, BOT[i].rot, 1, 1, 32, 32)
+		love.graphics.draw(BOT[i].image, BOT[i].x,
+				BOT[i].y, BOT[i].rot, 1, 1, 32, 32)
 	end
 	AIM.botu_info()
 end

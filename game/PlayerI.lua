@@ -11,8 +11,8 @@ function PlayerI.load()
 	PlayerI.image = love.graphics.newImage(pre.."11.png")
 	local width = love.graphics.getWidth()
     local height = love.graphics.getHeight()
-	PlayerI.x = width/2
-	PlayerI.y = height/2
+	PlayerI.x = 00
+	PlayerI.y = 0
 	PlayerI.w = 64
 	PlayerI.h = 64
 	PlayerI.rot = 0
@@ -32,45 +32,45 @@ end
 
 function PlayerI.update(dt)
 	local x, y = love.mouse.getPosition()
-	if love.keyboard.isDown("left") or love.keyboard.isDown("d") then
-		mapping.x = mapping.x + 100 * dt
+	if love.keyboard.isDown("left") or love.keyboard.isDown("a") then
 		PlayerI.x = PlayerI.x - 100 * dt
+		--[[
 		if mapping.wallTouch() then
-			mapping.x = mapping.x - 100 * dt
 			PlayerI.x = PlayerI.x + 100 * dt
 		end
+		]]
     	end
-    	if love.keyboard.isDown("right") or love.keyboard.isDown("g") then
-		mapping.x = mapping.x - 100 * dt
+    	if love.keyboard.isDown("right") or love.keyboard.isDown("d") then
 		PlayerI.x = PlayerI.x + 100 * dt
+		--[[
 		if mapping.wallTouch() then
-			mapping.x = mapping.x + 100 * dt
 			PlayerI.x = PlayerI.x - 100 * dt
 		end
+		]]
     end
-    	if love.keyboard.isDown("up") or love.keyboard.isDown("r") then
-		mapping.y = mapping.y + 100 * dt
+    	if love.keyboard.isDown("up") or love.keyboard.isDown("w") then
 		PlayerI.y = PlayerI.y - 100 * dt
+		--[[
 		if mapping.wallTouch() then
-			mapping.y = mapping.y - 100 * dt
 			PlayerI.y = PlayerI.y + 100 * dt
 		end
+		]]
 
     	end
-    	if love.keyboard.isDown("down") or love.keyboard.isDown("f") then
-		mapping.y = mapping.y - 100 * dt 
+    	if love.keyboard.isDown("down") or love.keyboard.isDown("s") then
 		PlayerI.y = PlayerI.y + 100 * dt 
+		--[[
 		if mapping.wallTouch() then
-			mapping.y = mapping.y + 100 * dt
 			PlayerI.y = PlayerI.y - 100 * dt
 		end
+		]]
 	end
 	--Physics coord move
 	phyPl.b:setX(PlayerI.x)	
 	phyPl.b:setY(PlayerI.y)
 	local dx, dy
-	dx = x-PlayerI.x
-	dy = y-PlayerI.y
+	dx = x-scrWidth/2
+	dy = y-scrHeight/2
 
 	PlayerI.rot = math.acos(dx/(math.sqrt(dx*dx+dy*dy)))*(dy/math.abs(dy))
 	if PlayerI.rot == nil then
@@ -92,11 +92,8 @@ end
 function PlayerI.draw()
 	local width = love.graphics.getWidth()
 	local height = love.graphics.getHeight()
-	Shop.draw()
-	Bullet.draw()
 	--imapping.draw()
-	love.graphics.draw(PlayerI.image, love.graphics.getWidth() / 2, love.graphics.getHeight() / 2, PlayerI.rot, -1, 1, PlayerI.offx, PlayerI.offy)	
-	Inventory.draw()
+	love.graphics.draw(PlayerI.image, PlayerI.x, PlayerI.y, PlayerI.rot, -1, 1, PlayerI.offx, PlayerI.offy)	
 end
 
 Clients = {}
@@ -156,7 +153,7 @@ end
 function Clients.draw ()
 	for i , C in ipairs (Clients.IPTable) do
 		if C.drawable then
-			love.graphics.draw (Clients.image, C.x+mapping.x, C.y+mapping.y, C.r, 1, 1, C.oh, C.ov)
+			love.graphics.draw (Clients.image, C.x, C.y, C.r, 1, 1, C.oh, C.ov)
 		end
 	end
 end
