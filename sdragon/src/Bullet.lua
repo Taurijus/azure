@@ -7,7 +7,9 @@ function Bullet.load ()
 	Bullet.LastDT = 1
 end
 
-function Bullet.AddShot(xx, yy, rot,v)
+function Bullet.AddShot (xx, yy, rot, v)
+	Networking.bullet (xx, yy, rot, v)
+	
 	Bullet.Count = Bullet.Count + 1
 	Bullet.List[Bullet.Count] =
 	{
@@ -17,7 +19,18 @@ function Bullet.AddShot(xx, yy, rot,v)
 		vy = v * math.sin(rot),
 		r = rot,
 	}
+end
 
+function Bullet.AddShotFromNetworking (xx, yy, rot, v)
+	Bullet.Count = Bullet.Count + 1
+	Bullet.List[Bullet.Count] =
+	{
+		x = xx,
+		y = yy,
+		vx = v * math.cos(rot),
+		vy = v * math.sin(rot),
+		r = rot,
+	}
 end
 
 function Bullet.update(dt)
