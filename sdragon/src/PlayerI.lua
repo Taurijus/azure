@@ -137,7 +137,8 @@ function PlayerI.update(dt)
 	if not love.mouse.isDown("l") then
 		PlayerI.TriggerLock = 0
 	end
-	Bullet.update(dt)
+	--WATA?
+	--Bullet.update(dt)
 end
 
 
@@ -176,64 +177,40 @@ end
 
 
 
-Clients = {}
-function Clients.load ()
-	Clients.IPTable = {}
-	rasta  = 0
-	totalClients = 0
-	Clients.image = love.graphics.newImage (pre.."11.png")
+RemoteUsers = {}
+function RemoteUsers.load ()
+	RemoteUsers.table = {}
+	RemoteUsers.image = PlayerI.image
 end
 
-function Clients.add (ip)
-	totalClients = totalClients + 1
-	table.insert (Clients.IPTable,
-	{
-		cip = ip,
-		id = totalClients,
-		oh = 32,
-		ov = 32,
-		x = 0,
-		y = 0,
-		r = 0,
-		drawable = false
-	})
+function RemoteUsers.add (id)
+	table.insert (RemoteUsers.table, {uid = id, x = 0, y = 0, r = 0, active = false})
 end
 
-function Clients.remove (ip)
-	for i , C in ipairs (Clients.IPTable) do
-		if C.cip == ip then
-			C.drawable = false
-			break
+function RemoteUsers.rem (id)
+	table.remove (RemoteUsers.table, RemoteUsers.getPos (id))
+end
+
+function RemoteUsers.update (id, xx, yy, rr)
+	local pos = RemoteUsers.getPos (id)
+	if pos ~= nil then
+		RemoteUsers.table[pos] = {x = xx, y = yy, r = rr, active = true}
+	end
+end
+
+function RemoteUsers.draw ()
+	for i , C in ipairs (RemoteUsers.table) do
+		if C.active then
+			love.graphics.draw (RemoteUsers.image, C.x, C.y, C.r, 1, 1, 32, 32)
 		end
 	end
 end
 
-function Clients.check (ip)
-	for i , C in ipairs (Clients.IPTable) do
-	   rasta = 1
-		if C.cip == ip then
-			return C.id
-		end
-	end
-	return 0
-end
-
-function Clients.update (id, x, y, r)
-	for i , C in ipairs (Clients.IPTable) do
-		if C.id == id then
-			C.x = x
-			C.y = y
-			C.r = r
-			C.drawable = true
-			break
+function RemoteUsers.getPos (id)
+	for i , C in ipairs (RemoteUsers.table) do
+		if uid == id then
+			return i
 		end
 	end
 end
 
-function Clients.draw ()
-	for i , C in ipairs (Clients.IPTable) do
-		if C.drawable then
-			love.graphics.draw (Clients.image, C.x, C.y, C.r, 1, 1, C.oh, C.ov)
-		end
-	end
-end
